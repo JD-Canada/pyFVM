@@ -17,9 +17,9 @@ FoamFile
 
 application     uFVM;
 
-startFrom       firstTime;
+startFrom       startTime;
 
-startTime       0;
+startTime       20;
 
 stopAt          endTime;
 

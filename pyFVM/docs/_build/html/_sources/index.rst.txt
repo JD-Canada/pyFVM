@@ -9,11 +9,13 @@ Welcome to pyFVM's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
+   
 pyFVM source
 ===================
-.. automodule:: src.region.cfdSetupRegion
+.. automodule:: src
    :members:
+   region.cfdSetupRegion
+   
 
 Indices and tables
 ==================

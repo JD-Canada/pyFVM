@@ -2,7 +2,22 @@
 
 
 def cfdGetFields(Region):
-    """ I am a docstring """
+    
+    """Gets field names from keys contained in Region.foamDictionary['fvSolution'].
+    
+    Attributes:
+        
+       fields (list): fields.
+
+    Returns:
+        
+       fields
+       
+    Example usage:
+        
+        fields = cfdGetFields(Region)
+        
+    """
     
     fields=[]
     

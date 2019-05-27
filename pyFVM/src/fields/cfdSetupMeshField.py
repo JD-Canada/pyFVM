@@ -1,8 +1,29 @@
-
 from pyFVM.src.fields.cfdSetMeshField import cfdSetMeshField
 
 
 def cfdSetupMeshField(Region,theName, theType):
+
+    """Create an empty dictionary used to initialize the field.
+    
+    The created dictionary is later passed to cfdSetMeshField(), where it is
+    attached to Region.fluid as a sub-dictionary (e.g. Region.fluid[theMeshField['name']]).
+    Detects if field is either type volScalar, volVector, surfaceScalar, or 
+    surfaceVector3 and creates an empty container with an adequate number of rows
+    and columns (i.e., scalar = 1 column, vector = 3 columns) to hold field data.
+    
+    Attributes:
+        
+       theMeshField (dict): dictionary that will hold data.
+       theMeshField['name'] (str): name of field.
+       theMeshField['type'] (str): field type 
+       
+    Example usage:
+        
+        fieldDictionary = cfdSetupMeshField(Region,theName, theType)
+        
+    TODO:
+        Pretty sure this is done.
+    """
     
     theMeshField={}
     theMeshField['name'] = theName
@@ -44,6 +65,4 @@ def cfdSetupMeshField(Region,theName, theType):
     theMeshField['prevTimeStep']={}
     theMeshField['prevTimeStep']['phi']=theMeshField['phi']
     
-    
-
     cfdSetMeshField(Region, theMeshField)

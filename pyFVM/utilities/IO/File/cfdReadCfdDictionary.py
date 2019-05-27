@@ -13,6 +13,7 @@ def cfdReadCfdDictionary(fpid,**kwargs):
         
         if not cfdSkipEmptyLines(tline):
             continue
+        
         if not cfdSkipMacroComments(tline):
             continue            
         
@@ -31,6 +32,7 @@ def cfdReadCfdDictionary(fpid,**kwargs):
         tline = tline.replace(";", "")
         
         if len(tline.split()) == 1 and subDictionary == False:
+            
             subDictionary=True
             dictionary[tline.split()[0]]={}
             currentSubDictKey=tline.split()[0]

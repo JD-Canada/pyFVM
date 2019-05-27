@@ -41,3 +41,4 @@ class cfdReadPolyMesh():
         cfdProcessElementTopology(self.Region.mesh)
         cfdProcessNodeTopology(self.Region.mesh)
         cfdProcessGeometry(self.Region.mesh)
+        

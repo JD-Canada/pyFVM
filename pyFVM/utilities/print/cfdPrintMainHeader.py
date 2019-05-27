@@ -1,6 +1,6 @@
 
 def cfdPrintMainHeader():
-
+    
     print('*-*-*-*-*-*-*-*-*-*-*-*-*-*-* pyFVM *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n');
     print('|| Code translated by Jason Duguay from the uFVM Matlab code.   ||\n');
     print('|| Written by the CFD Group at the American University of Beirut.   ||\n');

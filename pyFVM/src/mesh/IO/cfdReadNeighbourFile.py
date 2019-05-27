@@ -1,4 +1,3 @@
-import pandas as pd
 from pyFVM.utilities.IO.File.cfdSkipEmptyLines import cfdSkipEmptyLines
 from pyFVM.utilities.IO.File.cfdSkipMacroComments import cfdSkipMacroComments
 from pyFVM.utilities.IO.File.cfdReadCfdDictionary import cfdReadCfdDictionary
