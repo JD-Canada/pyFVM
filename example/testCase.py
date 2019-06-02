@@ -49,76 +49,87 @@ from pyFVM.src.time.cfdGetTimeSteps import cfdGetTimeSteps
 from pyFVM.utilities.IO.File.cfdSkipEmptyLines import cfdSkipEmptyLines
 from pyFVM.utilities.IO.File.cfdSkipMacroComments import cfdSkipMacroComments
 from pyFVM.utilities.IO.File.cfdReadCfdDictionary import cfdReadCfdDictionary
+from pyFVM.utilities.IO.File.cfdGetKeyValue import cfdGetKeyValue
 from pyFVM.utilities.IO.File.cfdGetFoamFileHeader import cfdGetFoamFileHeader
 from pyFVM.src.fields.cfdSetupMeshField import cfdSetupMeshField
 
 
 
-cfdReadTimeDirectory(Region)
 fluids=Region.fluid
 
-def cfdReadTimeDirectory(Region,**kwargs):
     
-    """Reads in field data from starting time folder.
-    
-    Depending on user input in the controlDict startFrom field, will 
-    open the respective time directory and read in the fields. The newly read 
-    field data is stored in a sub-dictionary of Region.fluid, with the key being
-    the field's name (e.g. Region.fluid['phi']. Everything necessary to define 
-    the field is accessible from Region. fluid['fieldKey'].
-    
-    Attributes:
-        
-       fieldName (str): name of field currently being loaded.
-       timeDirectories (list): list of time directories in case.
-       timeDirectory (str): path to initial time directory.
-       
-    Example usage:
-        
-        Region = cfdReadTimeDirectory(Region)
-        
-    TODO:
-        Pretty much everything ....
-    """
+"""Reads in field data from starting time folder.
 
-    kwargs=[]
+Depending on user input in the controlDict startFrom field, will 
+open the respective time directory and read in the fields. The newly read 
+field data is stored in a sub-dictionary of Region.fluid, with the key being
+the field's name (e.g. Region.fluid['phi']. Everything necessary to define 
+the field is accessible from Region. fluid['fieldKey'].
+
+Attributes:
     
-    if len(kwargs) > 0:
-        timeDirectory=kwargs['time']
-        
-        
-    elif Region.foamDictionary['controlDict']['startFrom']=='startTime':
-        timeDirectory=str(int(Region.foamDictionary['controlDict']['startTime']))
-        
-        
-    elif Region.foamDictionary['controlDict']['startFrom']=='latestTime':
-        timeDirectories=cfdGetTimeSteps(Region.caseDirectoryPath,Region)
-        timeDirectory=max(timeDirectories)
-        
-        
-    elif Region.foamDictionary['controlDict']['startFrom']=='firstTime':   
-        timeDirectory='0' 
-        
-    else:
-        print("Error in controlDict: startFrom is not valid!")
-        
-    for root, directory,files in os.walk(Region.caseDirectoryPath + "\\"+timeDirectory):
-        if not files:
-            print('Fields are not found in the %s directory' % (Region.caseDirectoryPath + "\\"+timeDirectory+"!"))
+   fieldName (str): name of field currently being loaded.
+   timeDirectories (list): list of time directories in case.
+   timeDirectory (str): path to initial time directory.
+   
+Example usage:
     
-    for file in files:
+    Region = cfdReadTimeDirectory(Region)
+    
+TODO:
+    Pretty much everything ....
+"""
+
+
+kwargs=[]
+
+if len(kwargs) > 0:
+    timeDirectory=kwargs['time']
+    
+    
+elif Region.foamDictionary['controlDict']['startFrom']=='startTime':
+    timeDirectory=str(int(Region.foamDictionary['controlDict']['startTime']))
+    
+    
+elif Region.foamDictionary['controlDict']['startFrom']=='latestTime':
+    timeDirectories=cfdGetTimeSteps(Region.caseDirectoryPath,Region)
+    timeDirectory=max(timeDirectories)
+    
+    
+elif Region.foamDictionary['controlDict']['startFrom']=='firstTime':   
+    timeDirectory='0' 
+    
+else:
+    print("Error in controlDict: startFrom is not valid!")
+    
+for root, directory,files in os.walk(Region.caseDirectoryPath + "\\"+timeDirectory):
+    if not files:
+        print('Fields are not found in the %s directory' % (Region.caseDirectoryPath + "\\"+timeDirectory+"!"))
+
+for file in files:
+    
+    fieldName=file
+    
+    fieldFilePath=Region.caseDirectoryPath + "\\"+timeDirectory+"\\"+fieldName
+    
+    header=cfdGetFoamFileHeader(fieldFilePath)
+    
+    cfdSetupMeshField(Region,fieldName,header['class'])
+    
+    Region.fluid[fieldName]['dimensions']=cfdGetKeyValue('dimension','dimensions',fieldFilePath)
+
         
-        fieldName=file
-        
-        fieldFilePath=Region.caseDirectoryPath + "\\"+timeDirectory+"\\"+fieldName
-        
-        header=cfdGetFoamFileHeader(fieldFilePath)
-        
-        cfdSetupMeshField(Region,fieldName,header['class'])
-        
-#    with open(fieldFilePath,"r") as fpid:
-#        contents=cfdReadCfdDictionary(fpid)
-        
+
+                            
+                        
+                    
+                    
+                    
+                
+                
+
+
+
 
 
 
