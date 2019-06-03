@@ -116,10 +116,20 @@ for file in files:
     
     cfdSetupMeshField(Region,fieldName,header['class'])
     
-    Region.fluid[fieldName]['dimensions']=cfdGetKeyValue('dimension','dimensions',fieldFilePath)
+    Region.fluid[fieldName]['dimensions']=cfdGetKeyValue('dimensions','dimensions',fieldFilePath)[2]
 
-        
+    internalField = cfdGetKeyValue('internalField','string',fieldFilePath)
+    print(internalField)
+    valueType=internalField[1]
+    
+    """
+    TO-DO: add functionality for reading 'surfaceScalarField'. I couldn't find
+    a test case to compare it to. All the cases have volScalar and volVector fields
+    """
 
+    if valueType == 'uniform':
+        if Region.fluid[fieldName]['type']=='volScalarField':
+            value_str = internalField[2][0]
                             
                         
                     

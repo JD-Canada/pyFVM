@@ -13,9 +13,10 @@ def cfdSetupMeshField(Region,theName, theType):
     
     Attributes:
         
+       Region (class instance): contains simulation's mesh.
        theMeshField (dict): dictionary that will hold data.
-       theMeshField['name'] (str): name of field.
-       theMeshField['type'] (str): field type 
+       theMeshField['name'] (str): name of field (i.e. theName).
+       theMeshField['type'] (str): field type (i.e. theType).
        
     Example usage:
         

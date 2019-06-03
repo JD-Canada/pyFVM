@@ -23,7 +23,6 @@ def cfdGetKeyValue(key, valueType, fileID):
         'cfdScalarList'. We can add these as we encounter a need for them. 
     """
     
-    
     with open(fileID,"r") as fpid:
 
         for linecount, tline in enumerate(fpid):
@@ -36,18 +35,33 @@ def cfdGetKeyValue(key, valueType, fileID):
                 tline=tline.replace(";","")
                 tline=tline.replace("[","")
                 tline=tline.replace("]","")
-                
+                tline=tline.replace("(","")
+                tline=tline.replace(")","")
+
                 splittedTline=tline.split()
+                #splittedTline.remove(key)
                 
-                value=[]
+                print(splittedTline)
                 
-                if valueType == 'dimensions':
+                if 'uniform' in splittedTline:
                     
-                    for iEntry in splittedTline:
+                    distribution='uniform'
+                    
+                elif 'nonuniform' in splittedTline:
+                    distribution='nonuniform'
+                    
+                else:
+                    distribution = None
+                    
+                value=[]
+                    
+                for iEntry in splittedTline:
+                    
+                    try:
+                        value.append(float(iEntry))
+                    except ValueError:
+                        pass
                         
-                        try:
-                            value.append(float(iEntry))
-                        except ValueError:
-                            pass
-                        
-                    return value
+    return [key, distribution, value]
+                
+                
