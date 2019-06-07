@@ -52,4 +52,6 @@ def cfdReadCfdDictionary(fpid,**kwargs):
                 dictionary[tline.split()[0]]=float(tline.split()[1])
             except ValueError:
                 dictionary[tline.split()[0]]=tline.split()[1]
+                
+                
     return dictionary

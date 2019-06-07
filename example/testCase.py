@@ -27,12 +27,6 @@ seeMesh=Region.mesh
 
 
 
-
-
-
-
-
-
 #start = time.time()
 #stop=time.time()
 #print(stop-start)
@@ -52,6 +46,7 @@ from pyFVM.utilities.IO.File.cfdReadCfdDictionary import cfdReadCfdDictionary
 from pyFVM.utilities.IO.File.cfdGetKeyValue import cfdGetKeyValue
 from pyFVM.utilities.IO.File.cfdGetFoamFileHeader import cfdGetFoamFileHeader
 from pyFVM.src.fields.cfdSetupMeshField import cfdSetupMeshField
+from pyFVM.utilities.IO.File.cfdReadAllDictionaries import cfdReadAllDictionaries as uv
 
 
 
@@ -119,29 +114,69 @@ for file in files:
     Region.fluid[fieldName]['dimensions']=cfdGetKeyValue('dimensions','dimensions',fieldFilePath)[2]
 
     internalField = cfdGetKeyValue('internalField','string',fieldFilePath)
-    print(internalField)
     valueType=internalField[1]
+
+
+    if Region.fluid[fieldName]['type']=='surfaceScalarField':
+        
+        print('surfaceScalarFields are not yet handled.')
+        
+        """
+        TO-DO: add functionality for reading 'surfaceScalarField'. I couldn't find
+        a test case to compare it to. All the tutorials have volScalar and volVector fields
+        """
+
+    else:
+        
+        #read either volScalarField or volVectorField
+
+        if valueType == 'uniform':
+            if Region.fluid[fieldName]['type']=='volScalarField':
+                
+                value_str = internalField[2][0]
+                for subList in Region.fluid[fieldName]['phi']:
+                    subList[0]=value_str
+                    
+            elif Region.fluid[fieldName]['type']=='volVectorField':
+                
+                value_str = internalField[2]
+                for count, subList in enumerate(Region.fluid[fieldName]['phi']):
+                    Region.fluid[fieldName]['phi'][count]=list(value_str)          
+                              
+        elif valueType == 'nonuniform':
+            print('The function cfdReadNonuniformList() is not yet writen.')
+            
+            """
+            TO-DO: translate the cfdReadNonuniformList function
+            """
+        
+        #read and store cfdBoundary field
+        theNumberOfBPatches = len(Region.mesh['cfdBoundaryPatchesArray'])
     
-    """
-    TO-DO: add functionality for reading 'surfaceScalarField'. I couldn't find
-    a test case to compare it to. All the cases have volScalar and volVector fields
-    """
-
-    if valueType == 'uniform':
-        if Region.fluid[fieldName]['type']=='volScalarField':
-            value_str = internalField[2][0]
-                            
-                        
-                    
-                    
-                    
+        for iBPatch, values in Region.mesh['cfdBoundaryPatchesArray'].items():
+            
+            
+            
+            numberOfBFaces=values['numberOfBFaces']
+            iFaceStart=values['startFaceIndex']
+            
+            iElementStart = Region.mesh['numberOfElements'] + iFaceStart - Region.mesh['numberOfInteriorFaces'] 
+            iElementEnd = iElementStart+numberOfBFaces-1
                 
-                
+            """Next: translate cfdGetKeyValueFromBlock"""   
+
+key='value'
+blockName=['boundaryField', iBPatch]
+
+bob=cfdGetKeyValueFromBlock(fieldFilePath)
 
 
+"""
+Function that returns all dictionaries and sub-dictionaries in a file
+"""
+fieldFilePath=Region.caseDirectoryPath + "\\"+"constant"+"\\"+"turbulenceProperties"
 
-
-
+dictionaries = cfdReadAllDictionaries(fieldFilePath)
 
 
 

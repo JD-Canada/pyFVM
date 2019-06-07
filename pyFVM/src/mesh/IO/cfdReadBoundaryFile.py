@@ -20,6 +20,7 @@ def cfdReadBoundaryFile(boundaryFile):
                 dictionary=cfdReadCfdDictionary(fpid)
                 continue
 
+            count=0
             if len(tline.split()) ==1:
                 if "(" in tline:
                     continue
@@ -31,12 +32,13 @@ def cfdReadBoundaryFile(boundaryFile):
                     numberOfBoundaries = tline.split()[0]
                     continue
                
-                boundaries[tline.split()[0]]=cfdReadCfdDictionary(fpid)
-            
-            if len(tline.split()) > 1:
+                boundaryName=tline.split()[0]
                 
-                boundaries=cfdReadCfdDictionary(fpid,line=tline.split())
+                boundaries[boundaryName]=cfdReadCfdDictionary(fpid)
+                boundaries[boundaryName]['numberOfBFaces']= boundaries[boundaryName].pop('nFaces')
+                boundaries[boundaryName]['startFaceIndex']= boundaries[boundaryName].pop('startFace')
+                count=count+1
+                boundaries[boundaryName]['index']= count
+
                 
     return boundaries, numberOfBoundaries
-
-    
