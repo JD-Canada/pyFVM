@@ -3,14 +3,14 @@ from pyFVM.utilities.IO.File.cfdReadAllDictionaries import cfdReadAllDictionarie
 def cfdReadTurbulenceProperties(Region):
  
     """Reads the turbulenceProperties dictionary 
-        and sets the turbulence properties in Regio.foamDictionary
-        If there is no turbulenceProperties file, sets the turbulence
-        model to 'laminar'    
+       and sets the turbulence properties in Region.foamDictionary
+       If there is no turbulenceProperties file, sets the turbulence
+       model to 'laminar'.   
 
 
     Attributes:
         
-       Region (str): the cfd Region.
+       Region (instance of cfdSetupRegion): the cfd Region.
        
     Example usage:
         
@@ -26,7 +26,6 @@ def cfdReadTurbulenceProperties(Region):
     turbulencePropertiesFilePath=Region.caseDirectoryPath+"/constant/turbulenceProperties"
     
     if not turbulencePropertiesFilePath:
-        print('Hola')
         Region.foamDictionary['turbulenceProperties']['turbulence'] = 'off'
         Region.foamDictionary['turbulenceProperties']['RASModel'] = 'laminar'
     
