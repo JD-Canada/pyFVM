@@ -2,6 +2,24 @@ from pyFVM.utilities.IO.File.cfdReadAllDictionaries import cfdReadAllDictionarie
 
 def cfdReadGravity(Region):
 
+    """Read the g file in the constant directory
+    and returns the gravity vector and dimensions. 
+
+
+    Attributes:
+        
+       Region (str): the cfd Region.
+       
+    Example usage:
+        
+        cfdReadGravity(Region)
+        
+    TODO:
+       
+       . 
+    """    
+
+
     gravityFilePath=Region.caseDirectoryPath + "/constant/g"
     
     gravityDict = cfdReadAllDictionaries(gravityFilePath)
