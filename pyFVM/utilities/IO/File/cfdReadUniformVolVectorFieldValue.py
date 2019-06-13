@@ -21,6 +21,7 @@ def cfdReadUniformVolVectorFieldValue(volVectorFieldEntry):
     for item in volVectorFieldEntry:
         
         if item == 'uniform':
+            uniform='uniform'
             continue
     
         item=item.replace("(","")
@@ -28,4 +29,4 @@ def cfdReadUniformVolVectorFieldValue(volVectorFieldEntry):
         
         vector.append(float(item))
         
-    return vector
+    return uniform, vector
