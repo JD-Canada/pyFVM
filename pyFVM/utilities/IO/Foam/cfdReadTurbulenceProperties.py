@@ -1,3 +1,4 @@
+import os 
 from pyFVM.utilities.IO.File.cfdReadAllDictionaries import cfdReadAllDictionaries
 
 def cfdReadTurbulenceProperties(Region):
@@ -25,7 +26,7 @@ def cfdReadTurbulenceProperties(Region):
     
     turbulencePropertiesFilePath=Region.caseDirectoryPath+"/constant/turbulenceProperties"
     
-    if not turbulencePropertiesFilePath:
+    if not os.path.isfile(turbulencePropertiesFilePath):
         Region.foamDictionary['turbulenceProperties']['turbulence'] = 'off'
         Region.foamDictionary['turbulenceProperties']['RASModel'] = 'laminar'
     
