@@ -1,10 +1,10 @@
 from setuptools import setup
 
 setup(name='pyFVM',
-      version='0.1',
-      description='Python 3.6 translation of uFVM',
+      version='0.0.0',
+      description='The funniest joke in the world',
       url='http://github.com/storborg/funniest',
-      author='Flying circus',
+      author='Flying Circus',
       author_email='flyingcircus@example.com',
       license='MIT',
       packages=['pyFVM'],

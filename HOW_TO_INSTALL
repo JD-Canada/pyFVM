@@ -1,0 +1,6 @@
+
+Type:
+
+pip install -e "./pyFVM"
+
+from the directory above the one this file you are reading is in.
