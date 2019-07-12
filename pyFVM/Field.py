@@ -1,4 +1,5 @@
 import pyFVM.Math as mth
+import sys
 
 
 class Field():
@@ -23,34 +24,37 @@ class Field():
         self.Region=Region
         self.name = fieldName
         self.type = fieldType
+        self.dimensions=[]
+        self.boundaryPatchRef={}
         
         if self.type == 'volScalarField':
             
             self.theInteriorArraySize = self.Region.mesh.numberOfElements
             self.theBoundaryArraySize = self.Region.mesh.numberOfBElements
             self.phi= [[0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
-            print('volScalarField read')
+            print('%s is a volScalarField' % self.name)
         
         if self.type == 'volVectorField':
             
             self.theInteriorArraySize = self.Region.mesh.numberOfElements
             self.theBoundaryArraySize = self.Region.mesh.numberOfBElements
             self.phi= [[0, 0, 0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
-            print('volVectorField read')
+            print('%s is a volVectorField' % self.name)
             
         if self.type == 'surfaceScalarField':
             
             self.theInteriorArraySize = self.Region.mesh.numberOfInteriorFaces
             self.theBoundaryArraySize = self.Region.mesh.numberOfBFaces
             self.phi= [[0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
-            print('surfaceScalarField read')  
+            print('%s is a surfaceScalarField' % self.name)
+            
             
         if self.type == 'surfaceVector3Field':
             
             self.theInteriorArraySize = self.Region.mesh.numberOfInteriorFaces
             self.theBoundaryArraySize =self.Region.mesh.numberOfBFaces
             self.phi= [[0,0,0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
-            print('surfaceVector3Field read')    
+            print('%s is a surfaceVector3Field' % self.name)
         
         #Previous iteration
         self.prevIter={}
@@ -60,7 +64,9 @@ class Field():
         self.prevTimeStep={}
         self.prevTimeStep['phi']=self.phi
         
+        
         self.cfdUpdateScale()
+        
         
         
     def cfdUpdateScale(self):
@@ -75,7 +81,7 @@ class Field():
             
             cfdUpdateScale(Region,'rho')
         """    
-#        print(self.phi)
+
         theMagnitude = mth.cfdMag(self.phi)
         
    
@@ -101,8 +107,6 @@ class Field():
             phiScale = max(phiMax,p_dyn)
     
         elif self.name=='U':
-#            print('mag')
-#            print(theMagnitude)
             phiScale = max(self.Region.lengthScale,phiMax)
             
         else: 
@@ -113,4 +117,106 @@ class Field():
         self.min=phiMin
         self.scale=phiScale
 
+
+    def setDimensions(self,dimensions):
         
+        self.dimensions=dimensions
+
+
+    def cfdUpdateScalarFieldForAllBoundaryPatches(self):
+        
+        for iBPatch, theBCInfo in self.Region.mesh.cfdBoundaryPatchesArray.items():
+            
+            self.iBPatch = iBPatch #for using in other functions
+            
+            #boundary type for patch defined in 'boundary' file in polyMesh folder
+            thePhysicalPatchType=theBCInfo['type']
+            
+            #boundary type defined for same patch in "0" file
+            theBCType=self.boundaryPatchRef[iBPatch]['type']
+            
+
+            if thePhysicalPatchType == 'wall':
+                
+                if theBCType == 'fixedValue':
+                    
+                    self.cfdUpdateFixedValueScalar()
+                    
+                elif theBCType == 'zeroGradient' or thePhysicalPatchType == 'noSlip' or thePhysicalPatchType == 'slip' :
+                    
+                    self.cfdUpdateZeroGradientScalar()
+                    
+                else:
+                    print('The %s patch type is ill defined or missing!' % iBPatch)
+                
+            elif thePhysicalPatchType == 'inlet':
+                
+                if theBCType == 'fixedValue':
+                    
+                    self.cfdUpdateFixedValueScalar()
+                    
+                elif theBCType == 'zeroGradient':
+                    
+                    self.cfdUpdateFixedValueSalar()
+                    
+                else:
+                    print('The %s patch type is ill defined or missing!' % iBPatch)
+
+            elif thePhysicalPatchType == 'outlet':
+                
+                if theBCType == 'fixedValue' :
+                    
+                    self.cfdUpdateFixedValueScalar()
+                    
+                elif theBCType == 'zeroGradient' or theBCType == 'outlet':
+                    
+                    self.cfdUpdateZeroGradientScalar()
+                    
+                else:
+                    
+                    print('The %s patch type is ill defined or missing!' % iBPatch)       
+ 
+
+            elif thePhysicalPatchType == 'symmetry':
+                
+                self.cfdUpdateZeroGradientScalar()
+                
+            elif thePhysicalPatchType == 'empty':
+                
+                self.cfdUpdateZeroGradientScalar()                
+
+            else:
+                
+                print('Physical condition bc not defined correctly for the %s patch in "boundary" file !' %iBPatch)
+                sys.exit()
+
+
+    def cfdUpdateFixedValueScalar(self):
+        
+        iBElements=self.Region.mesh.cfdBoundaryPatchesArray[self.iBPatch]['iBElements']
+        
+        boundaryValue=self.boundaryPatchRef[self.iBPatch]['value']
+               
+        for index in iBElements:
+            self.phi[index] = boundaryValue
+        
+        
+    def cfdUpdateZeroGradientScalar(self):
+        
+        iBElements=self.Region.mesh.cfdBoundaryPatchesArray[self.iBPatch]['iBElements']
+        
+        #elements that own the boundary faces
+        owners_b = self.Region.mesh.cfdBoundaryPatchesArray[self.iBPatch]['owners_b']
+        
+        newValues=[]
+        
+        for index in owners_b:
+            newValues.append(self.phi[index])
+
+        for count, index in enumerate(iBElements):
+
+            self.phi[index]=newValues[count]
+                
+    
+    
+       

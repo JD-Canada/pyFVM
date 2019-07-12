@@ -23,7 +23,7 @@ def cfdPrintMainHeader():
 def cfdGetFoamFileHeader(fieldFilePath):
 
     with open(fieldFilePath,"r") as fpid:
-        print('\nReading %s file ...' %(fieldFilePath))
+        print('Reading %s file ...' %(fieldFilePath))
        
         header={}
         for linecount, tline in enumerate(fpid):

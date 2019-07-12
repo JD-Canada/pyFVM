@@ -15,6 +15,7 @@ class Polymesh():
         self.neighbourFile = r"%s/constant/polyMesh/neighbour" % self.Region.caseDirectoryPath
         self.boundaryFile = r"%s/constant/polyMesh/boundary" % self.Region.caseDirectoryPath 
         
+        print('\n')
         print('Reading contents of ./constant/polyMesh folder ...')
         
         self.cfdReadPointsFile()
@@ -35,6 +36,9 @@ class Polymesh():
         self.cfdProcessElementTopology()
         self.cfdProcessNodeTopology()
         self.cfdProcessGeometry()
+        
+        self.cfdGetBoundaryElementsSubArrayForBoundaryPatch()
+        self.cfdGetOwnersSubArrayForBoundaryPatch()
         
     def cfdReadPointsFile(self):
         
@@ -528,5 +532,26 @@ class Polymesh():
             self.wallDistLimited[iBFace]= max(self.wallDist[iBFace], 0.05*np.linalg.norm(self.faceCf[iBFace]))        
         
         
+    def cfdGetBoundaryElementsSubArrayForBoundaryPatch(self):
         
+        for iBPatch, theBCInfo in self.cfdBoundaryPatchesArray.items():
+            
+            startBElement=self.numberOfElements+self.cfdBoundaryPatchesArray[iBPatch]['startFaceIndex']-self.numberOfInteriorFaces
+            endBElement=startBElement+self.cfdBoundaryPatchesArray[iBPatch]['numberOfBFaces']
+        
+            self.cfdBoundaryPatchesArray[iBPatch]['iBElements']=list(range(int(startBElement),int(endBElement)))        
+
+
+    def cfdGetOwnersSubArrayForBoundaryPatch(self):
+        
+        for iBPatch, theBCInfo in self.cfdBoundaryPatchesArray.items():
+            
+            startBFace=self.cfdBoundaryPatchesArray[iBPatch]['startFaceIndex']
+            
+            endBFace=startBFace+self.cfdBoundaryPatchesArray[iBPatch]['numberOfBFaces']
+        
+            iBFaces=list(range(int(startBFace),int(endBFace)))    
+            
+            
+            self.cfdBoundaryPatchesArray[iBPatch]['owners_b']=[self.owners[i] for i in iBFaces]
         

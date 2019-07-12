@@ -161,7 +161,7 @@ class FoamDictionaries():
             pass
         
         else:
-            print('\n\nReading Gravity ...\n')        
+            print('Reading Gravity file ...')        
             gravityDict = io.cfdReadAllDictionaries(gravityFilePath)
             
             dimensions=[]
@@ -246,7 +246,6 @@ class FoamDictionaries():
             
         """
         
-        print("\n")
         print("Searching for time directories ... \n")
     
         self.Region.timeSteps=[]
@@ -395,7 +394,7 @@ class FoamDictionaries():
                             if count > theNumberOfElements-1:
                                 continue
                             else:
-#                                print(list(value_str))
+                                
                                 self.Region.fluid[fieldName].phi[count]=list(value_str)                                    
                         
                 elif valueType == 'nonuniform':
@@ -404,7 +403,7 @@ class FoamDictionaries():
 #                theNumberOfBPatches = len(self.Region.mesh.cfdBoundaryPatchesArray)
                         
                 for iBPatch, values in self.Region.mesh.cfdBoundaryPatchesArray.items():
-                
+                    
                     numberOfBFaces=values['numberOfBFaces']
                     iFaceStart=values['startFaceIndex']
                     
@@ -423,9 +422,12 @@ class FoamDictionaries():
                         if boundaryType == 'zeroGradient' or boundaryType == 'empty' : 
                             
                             if self.Region.fluid[fieldName].type=='volScalarField' or self.Region.fluid[fieldName].type=='surfaceScalarField':
+                                
                                 boundaryValue = 0                        
                             elif self.Region.fluid[fieldName].type=='volVectorField':
-                                boundaryValue = [0,0,0]                   
+                                
+                                boundaryValue = [0,0,0]  
+                                
                         else:
                             print('Warning: The %s field\'s %s boundary does not have a \'value\' entry' %(fieldName, iBPatch))
                             
@@ -435,27 +437,41 @@ class FoamDictionaries():
                             break               
         
                     try:
-                        
+                       
                         if valueType == 'uniform':
-                            if self.Region.fluid[fieldName].type=='volScalarField' or Region.fluid[fieldName].type=='surfaceScalarField':
+                            
+                            if self.Region.fluid[fieldName].type=='volScalarField' or self.Region.fluid[fieldName].type=='surfaceScalarField':
             
-                                for count, subList in enumerate(Region.fluid[fieldName].phi):
+                                for count, subList in enumerate(self.Region.fluid[fieldName].phi):
                                     if count < iElementStart or count > iElementEnd:
                                         continue
                                     else:
-                                        Region.fluid[fieldName].phi[count]=boundaryValue
+                                        self.Region.fluid[fieldName].phi[count]=boundaryValue
                                         
-                            if Region.fluid[fieldName].type=='volVectorField':
+                            if self.Region.fluid[fieldName].type=='volVectorField':
                                 
-                                for count, subList in enumerate(Region.fluid[fieldName].phi):
+                                for count, subList in enumerate(self.Region.fluid[fieldName].phi):
+                                    
                                     if count < iElementStart or count > iElementEnd:
+                                        
                                         continue
                                     else:
-                                        Region.fluid[fieldName].phi[count]=boundaryValue
+                                        #print(count)
+                                        #print(boundaryValue)
+                                        self.Region.fluid[fieldName].phi[count]=boundaryValue
                         
                     except NameError:
+                        
+                        self.Region.fluid[fieldName].boundaryPatchRef[iBPatch]={}
+                        self.Region.fluid[fieldName].boundaryPatchRef[iBPatch]['type']=boundaryType
+                        del(boundaryType)
                         continue
                     
+                    self.Region.fluid[fieldName].boundaryPatchRef[iBPatch]={}
+                    self.Region.fluid[fieldName].boundaryPatchRef[iBPatch]['type']=boundaryType
+                    self.Region.fluid[fieldName].boundaryPatchRef[iBPatch]['valueType']=valueType
+                    self.Region.fluid[fieldName].boundaryPatchRef[iBPatch]['value']=boundaryValue
+
                     del(boundaryValue)
                     del(valueType)
                     del(boundaryType)                       
@@ -485,7 +501,7 @@ class FoamDictionaries():
             pass
     
         else:
-            print('Reading transport properties ...')
+            print('\nReading transport properties ...')
     
             transportDicts=io.cfdReadAllDictionaries(transportPropertiesFilePath)
             transportKeys=list(transportDicts)   
@@ -493,7 +509,7 @@ class FoamDictionaries():
             self.transportProperties={}
     
             for iKey in transportKeys:
-                print(iKey)
+               
                 
                 if iKey=='FoamFile' or iKey=='cfdTransportModel':
                     pass
