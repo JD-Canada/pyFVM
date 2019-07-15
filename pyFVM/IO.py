@@ -146,7 +146,6 @@ def cfdReadAllDictionaries(filePath):
             
             for line, tline in enumerate(fpid):
                 
-                
                 if not cfdSkipEmptyLines(tline):
                     continue
                 
@@ -199,7 +198,6 @@ def cfdReadAllDictionaries(filePath):
                 if len(tline.split()) > 1 and isSubDictionary == True:
         
                     dictionaries[currentDictionaryName][currentSubDictionaryName][tline.split()[0]]=tline.split()[1:]
-                    
                     continue     
             
             return dictionaries

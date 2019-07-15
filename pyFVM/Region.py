@@ -69,8 +69,10 @@ class Region():
         
         #update boundary values for phi field 
         for i in self.fluid:
-            if self.fluid[i].type == 'volScalarField':
-                self.fluid[i].cfdUpdateScalarFieldForAllBoundaryPatches()
+            
+            self.fluid[i].updateFieldForAllBoundaryPatches()
+                
+
             
         self.dictionaries.cfdReadTransportProperties()
         

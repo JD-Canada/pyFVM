@@ -11,11 +11,6 @@ region=Region.Region(os.getcwd())
 #access Region's attributes
 region_vars=vars(region)
 
-#access mesh attributes
-mesh=vars(region.mesh)
-
-
-
 
 
 

@@ -1,5 +1,7 @@
-import pyFVM.Math as mth
+import numpy as np
 import sys
+
+import pyFVM.Math as mth
 
 
 class Field():
@@ -31,29 +33,32 @@ class Field():
             
             self.theInteriorArraySize = self.Region.mesh.numberOfElements
             self.theBoundaryArraySize = self.Region.mesh.numberOfBElements
-            self.phi= [[0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
+            self.phi = np.zeros((self.theInteriorArraySize+self.theBoundaryArraySize, 1))
+#            self.phi= [[0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
             print('%s is a volScalarField' % self.name)
         
         if self.type == 'volVectorField':
             
             self.theInteriorArraySize = self.Region.mesh.numberOfElements
             self.theBoundaryArraySize = self.Region.mesh.numberOfBElements
-            self.phi= [[0, 0, 0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
+            self.phi = np.zeros((self.theInteriorArraySize+self.theBoundaryArraySize, 3))
+#            self.phi= [[0, 0, 0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
             print('%s is a volVectorField' % self.name)
             
         if self.type == 'surfaceScalarField':
             
             self.theInteriorArraySize = self.Region.mesh.numberOfInteriorFaces
             self.theBoundaryArraySize = self.Region.mesh.numberOfBFaces
-            self.phi= [[0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
+            self.phi = np.zeros((self.theInteriorArraySize+self.theBoundaryArraySize, 1))
+#            self.phi= [[0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
             print('%s is a surfaceScalarField' % self.name)
-            
             
         if self.type == 'surfaceVector3Field':
             
             self.theInteriorArraySize = self.Region.mesh.numberOfInteriorFaces
             self.theBoundaryArraySize =self.Region.mesh.numberOfBFaces
-            self.phi= [[0,0,0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
+            self.phi = np.zeros((self.theInteriorArraySize+self.theBoundaryArraySize, 3))
+#            self.phi= [[0,0,0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
             print('%s is a surfaceVector3Field' % self.name)
         
         #Previous iteration
@@ -63,7 +68,6 @@ class Field():
         #Previous time step
         self.prevTimeStep={}
         self.prevTimeStep['phi']=self.phi
-        
         
         self.cfdUpdateScale()
         
@@ -123,7 +127,7 @@ class Field():
         self.dimensions=dimensions
 
 
-    def cfdUpdateScalarFieldForAllBoundaryPatches(self):
+    def updateFieldForAllBoundaryPatches(self):
         
         for iBPatch, theBCInfo in self.Region.mesh.cfdBoundaryPatchesArray.items():
             
@@ -135,73 +139,85 @@ class Field():
             #boundary type defined for same patch in "0" file
             theBCType=self.boundaryPatchRef[iBPatch]['type']
             
-
+            
             if thePhysicalPatchType == 'wall':
                 
                 if theBCType == 'fixedValue':
                     
-                    self.cfdUpdateFixedValueScalar()
+                    if self.type == 'volScalarField':
+                        self.updateFixedValue()
+                    if self.type == 'volVectorField':
+                        self.updateFixedValue()
                     
                 elif theBCType == 'zeroGradient' or thePhysicalPatchType == 'noSlip' or thePhysicalPatchType == 'slip' :
                     
-                    self.cfdUpdateZeroGradientScalar()
-                    
+                    if self.type == 'volScalarField':
+                        self.updateZeroGradient()
+                    if self.type == 'volVectorField':
+                        self.updateZeroGradient()
                 else:
                     print('The %s patch type is ill defined or missing!' % iBPatch)
                 
             elif thePhysicalPatchType == 'inlet':
                 
                 if theBCType == 'fixedValue':
-                    
-                    self.cfdUpdateFixedValueScalar()
+                    if self.type == 'volScalarField':
+                        self.updateFixedValue()
+                    if self.type == 'volVectorField':
+                        self.updateFixedValue() 
                     
                 elif theBCType == 'zeroGradient':
-                    
-                    self.cfdUpdateFixedValueSalar()
-                    
+                    if self.type == 'volScalarField':
+                        self.updateFixedValue()
+                    if self.type == 'volVectorField':
+                        self.updateFixedValue() 
                 else:
                     print('The %s patch type is ill defined or missing!' % iBPatch)
 
             elif thePhysicalPatchType == 'outlet':
                 
                 if theBCType == 'fixedValue' :
-                    
-                    self.cfdUpdateFixedValueScalar()
-                    
+                    if self.type == 'volScalarField':
+                        self.updateFixedValue()
+                    if self.type == 'volVectorField':
+                        self.updateFixedValue()
+                        
                 elif theBCType == 'zeroGradient' or theBCType == 'outlet':
                     
-                    self.cfdUpdateZeroGradientScalar()
-                    
+                    if self.type == 'volScalarField':
+                        self.updateZeroGradient()
+                    if self.type == 'volVectorField':
+                        self.updateZeroGradient()
                 else:
-                    
                     print('The %s patch type is ill defined or missing!' % iBPatch)       
  
-
             elif thePhysicalPatchType == 'symmetry':
                 
-                self.cfdUpdateZeroGradientScalar()
-                
+                if self.type == 'volScalarField':
+                    self.updateZeroGradient()
+                if self.type == 'volVectorField':
+                    self.updateSymmetry()
+                    
             elif thePhysicalPatchType == 'empty':
                 
-                self.cfdUpdateZeroGradientScalar()                
+                if self.type == 'volScalarField':
+                    self.updateZeroGradient()
+                if self.type == 'volVectorField':
+                    self.updateSymmetry()
 
             else:
-                
                 print('Physical condition bc not defined correctly for the %s patch in "boundary" file !' %iBPatch)
                 sys.exit()
 
 
-    def cfdUpdateFixedValueScalar(self):
+    def updateFixedValue(self):
         
         iBElements=self.Region.mesh.cfdBoundaryPatchesArray[self.iBPatch]['iBElements']
         
-        boundaryValue=self.boundaryPatchRef[self.iBPatch]['value']
-               
-        for index in iBElements:
-            self.phi[index] = boundaryValue
+        self.phi[iBElements] = self.boundaryPatchRef[self.iBPatch]['value']
         
         
-    def cfdUpdateZeroGradientScalar(self):
+    def updateZeroGradient(self):
         
         iBElements=self.Region.mesh.cfdBoundaryPatchesArray[self.iBPatch]['iBElements']
         
@@ -214,9 +230,36 @@ class Field():
             newValues.append(self.phi[index])
 
         for count, index in enumerate(iBElements):
-
             self.phi[index]=newValues[count]
                 
     
-    
-       
+    def updateSymmetry(self):
+        
+        
+        #get indices for self.iBPatch's boundary faces in self.phi array
+        self.iBElements=self.Region.mesh.cfdBoundaryPatchesArray[self.iBPatch]['iBElements']
+        
+        #get indices for the owners (i.e. cells) for self.iBPatch's boundary faces in self.phi array 
+        self.owners_b = self.Region.mesh.cfdBoundaryPatchesArray[self.iBPatch]['owners_b']
+        
+        #get vector (direction in which the face points) for self.iBpatch's boundary faces 
+        self.Sb = self.Region.mesh.cfdBoundaryPatchesArray[self.iBPatch]['facesSf']
+        
+        #normalize Sb vector
+        self.normSb = mth.cfdMag(self.Sb)
+        
+        #normalize Sb components and horizontally stack them into the columns of array n
+        self.n=np.column_stack((self.Sb[:,0]/self.normSb,self.Sb[:,1]/self.normSb,self.Sb[:,2]/self.normSb))
+        
+        #perform elementwise multiplication of owner's values with boundary face normals
+        self.U_normal_cfdMag=(self.phi[self.owners_b]*self.n).sum(1)
+        
+        #seems to do the same thing a the above line without the .sum(1)
+        self.U_normal=np.column_stack((self.U_normal_cfdMag*self.n[:,0],self.U_normal_cfdMag*self.n[:,1],self.U_normal_cfdMag*self.n[:,2]))
+        
+        
+        self.phi[self.iBElements]=self.phi[self.owners_b]-self.U_normal
+        
+        
+        
+        
