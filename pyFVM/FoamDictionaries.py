@@ -2,6 +2,7 @@ import os
 import pyFVM.IO as io
 import pyFVM.Field as field
 import pyFVM.Math as mth
+import numpy as np
 
 
 class FoamDictionaries():
@@ -509,8 +510,7 @@ class FoamDictionaries():
             self.transportProperties={}
     
             for iKey in transportKeys:
-               
-                
+                     
                 if iKey=='FoamFile' or iKey=='cfdTransportModel':
                     pass
                 
@@ -531,8 +531,7 @@ class FoamDictionaries():
     
                     self.Region.fluid[iKey]=field.Field(self.Region,iKey,'volScalarField')
                     self.Region.fluid[iKey].dimensions=transportDicts[iKey][0:7]  
-                    self.Region.fluid[iKey].phi= [[keyValue] for i in range(self.Region.mesh.numberOfElements+self.Region.mesh.numberOfBElements)]
-            
+                    self.Region.fluid[iKey].phi.fill(keyValue)
             
                     numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
                     for iPatch in range(0,numberOfBPatches):
@@ -552,8 +551,8 @@ class FoamDictionaries():
                 boundaryPatch={} 
     
                 self.Region.fluid['rho']=field.Field(self.Region,'rho','volScalarField')
-                self.Region.fluid['rho'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
-                self.Region.fluid['rho'].phi= [[1.] for i in range(self.Region.mesh.numberOfElements+self.Region.mesh.numberOfBElements)]
+                self.Region.fluid['rho'].dimensions=[0., 0., 0., 0., 0., 0.,0.]
+                self.Region.fluid['rho'].phi.fill(1.)
 
                 numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
                 
@@ -573,7 +572,7 @@ class FoamDictionaries():
     
                 self.Region.fluid['mu']=field.Field(self.Region,'mu','volScalarField')
                 self.Region.fluid['mu'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
-                self.Region.fluid['mu'].phi= [[1E-3] for i in range(self.Region.mesh.numberOfElements+self.Region.mesh.numberOfBElements)]
+                self.Region.fluid['mu'].phi.fill(1E-3)
 
                 numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
                 
@@ -591,7 +590,7 @@ class FoamDictionaries():
     
                 self.Region.fluid['Cp']=field.Field(self.Region,'Cp','volScalarField')
                 self.Region.fluid['Cp'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
-                self.Region.fluid['Cp'].phi= [[1004.] for i in range(self.Region.mesh.numberOfElements+self.Region.mesh.numberOfBElements)]
+                self.Region.fluid['Cp'].phi.fill(1004.)
 
                 numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
                 
@@ -607,20 +606,14 @@ class FoamDictionaries():
                 if 'DT' in transportKeys:
                
                     boundaryPatch={} 
-                    kField=[]
                     
                     DTField = self.Region.fluid['DT'].phi
                     CpField = self.Region.fluid['Cp'].phi
                     rhoField = self.Region.fluid['rho'].phi            
 
-                    for i in range(0,len(DTField)):
-                        
-                        kField.append([DTField[i][0]*CpField[i][0]*rhoField[i][0]])    
-                    
-        
                     self.Region.fluid['k']=field.Field(self.Region,'k','volScalarField')
                     self.Region.fluid['k'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
-                    self.Region.fluid['k'].phi= kField
+                    self.Region.fluid['k'].phi= DTField*CpField*rhoField  
     
                     numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
                     

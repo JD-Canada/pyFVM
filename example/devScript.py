@@ -1,7 +1,7 @@
 
 import os
 import pyFVM.Region as Region
-
+import numpy as np
 """
 Set Region as an instance of the Region class. The Region.Region.__init__
 function is where everything is called into existence.
@@ -10,10 +10,6 @@ region=Region.Region(os.getcwd())
 
 #access Region's attributes
 region_vars=vars(region)
-
-
-
-
 
 
 
