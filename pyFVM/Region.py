@@ -1,9 +1,14 @@
 
+import numpy as np
+
 import pyFVM.IO as io
 import pyFVM.FoamDictionaries as fd
 import pyFVM.Polymesh as pm
 import pyFVM.Equation as equation
 import pyFVM.Field as field
+import pyFVM.Interpolate as interpolate
+import pyFVM.Coefficients as coefficients
+import pyFVM.Fluxes as fluxes
 
 
 
@@ -37,28 +42,20 @@ class Region():
         #empty dictionary to hold 'fluid' properties. I a better name is 'field'
         self.fluid={}
         
-        
-        
         #model is used to hold the various equations
         self.model={}
-
-
 
         #creates an instance of the FoamDictionaires class
         #most of FoamDictionaries methods are initiated in the __init__
         #function, but two are not: 'cfdReadTimeDirectory' and cfdReadTransportProperties()
         self.dictionaries=fd.FoamDictionaries(self)
         
-        
-        
-        #creats and instance of Polymesh, which runs all the methods necessary
+        #creates an instance of Polymesh, which runs all the methods necessary
         #to get the mesh topology from the __init__ function of the class
         self.mesh=pm.Polymesh(self)
         
         print('\n')
         self.cfdGeometricLengthScale()
-
-
 
         #these two require the mesh and therefore are not included in the __init__
         #function of FoamDictionaries and are instead run after initializing 
@@ -66,21 +63,26 @@ class Region():
         self.dictionaries.cfdReadTimeDirectory()
         
         
-        
         #update boundary values for phi field 
         for i in self.fluid:
             
             self.fluid[i].updateFieldForAllBoundaryPatches()
                 
-
-            
         self.dictionaries.cfdReadTransportProperties()
         
-#        self.model['phi']=equation.Equation(self,'phi')
-#        self.model['phi'].setTerms(['Transient', 'Convection'])
-#        
-#        self.fluid['mdot_f']=field.Field(self,'mdot_f','surfaceScalarField')
-#        self.fluid['mdot_f'].dimensions=[0,0,0,0,0,0,0]
+        #Define transient-convection equation
+        self.model['phi']=equation.Equation(self,'phi')
+        self.model['phi'].setTerms(['Transient', 'Convection'])
+        
+        #Define mdot_f field
+        self.fluid['mdot_f']=field.Field(self,'mdot_f','surfaceScalarField')
+        self.fluid['mdot_f'].dimensions=[0,0,0,0,0,0,0]
+        self.initializeMdotFromU()
+        
+        io.cfdPrintHeader()
+        
+        self.coefficients=coefficients.Coefficients(self)
+        self.fluxes=fluxes.Fluxes(self)
         
     def cfdGeometricLengthScale(self):
     
@@ -92,3 +94,13 @@ class Region():
         self.lengthScale = self.totalVolume**(1/3)
     
 
+    def initializeMdotFromU(self):
+        #not sure if this function fits here?
+        
+        U_f=interpolate.interpolateFromElementsToFaces(self,'linear','U')
+        rho_f=np.squeeze(interpolate.interpolateFromElementsToFaces(self,'linear','rho'))
+        Sf=self.mesh.faceSf
+        
+        self.fluid['mdot_f'].phi=rho_f*(Sf*U_f).sum(1)
+        
+        

@@ -20,6 +20,14 @@ def cfdPrintMainHeader():
     print('\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n');
 
 
+def cfdPrintHeader():
+    print('\n\n')
+    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* pyFVM *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||');
+    print('||                                                                             ||');
+    print('||                             Starting simulation                             ||');
+    print('||                                                                             ||');
+    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*_*-* *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||\n');
+
 def cfdGetFoamFileHeader(fieldFilePath):
 
     with open(fieldFilePath,"r") as fpid:

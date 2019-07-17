@@ -34,6 +34,7 @@ class Field():
             self.theInteriorArraySize = self.Region.mesh.numberOfElements
             self.theBoundaryArraySize = self.Region.mesh.numberOfBElements
             self.phi = np.zeros((self.theInteriorArraySize+self.theBoundaryArraySize, 1))
+#            self.phi_f = np.zeros((self.Region.mesh.numberOfFaces, 1))
 #            self.phi= [[0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
             print('%s is a volScalarField' % self.name)
         
@@ -42,6 +43,7 @@ class Field():
             self.theInteriorArraySize = self.Region.mesh.numberOfElements
             self.theBoundaryArraySize = self.Region.mesh.numberOfBElements
             self.phi = np.zeros((self.theInteriorArraySize+self.theBoundaryArraySize, 3))
+#            self.phi_f = np.zeros((self.Region.mesh.numberOfFaces, 3))
 #            self.phi= [[0, 0, 0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
             print('%s is a volVectorField' % self.name)
             
@@ -50,6 +52,7 @@ class Field():
             self.theInteriorArraySize = self.Region.mesh.numberOfInteriorFaces
             self.theBoundaryArraySize = self.Region.mesh.numberOfBFaces
             self.phi = np.zeros((self.theInteriorArraySize+self.theBoundaryArraySize, 1))
+#            self.phi_f = np.zeros((self.Region.mesh.numberOfFaces, 1))
 #            self.phi= [[0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
             print('%s is a surfaceScalarField' % self.name)
             
@@ -58,6 +61,7 @@ class Field():
             self.theInteriorArraySize = self.Region.mesh.numberOfInteriorFaces
             self.theBoundaryArraySize =self.Region.mesh.numberOfBFaces
             self.phi = np.zeros((self.theInteriorArraySize+self.theBoundaryArraySize, 3))
+#            self.phi_f = np.zeros((self.Region.mesh.numberOfFaces, 3))
 #            self.phi= [[0,0,0] for i in range(self.theInteriorArraySize+self.theBoundaryArraySize)]
             print('%s is a surfaceVector3Field' % self.name)
         

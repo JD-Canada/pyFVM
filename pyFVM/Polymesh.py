@@ -41,8 +41,11 @@ class Polymesh():
         self.cfdGetOwnersSubArrayForBoundaryPatch()
         self.cfdGetFaceSfSubArrayForBoundaryPatch()
         
-    def cfdReadPointsFile(self):
+        self.interiorFaceOwners = self.owners[0:self.numberOfInteriorFaces]
+        self.interiorFaceNeighbours = self.neighbours[0:self.numberOfInteriorFaces]
+        self.interiorFaceWeights = self.faceWeights[0:self.numberOfInteriorFaces]
         
+    def cfdReadPointsFile(self):
         
         with open(self.pointsFile,"r") as fpid:
             
@@ -571,4 +574,5 @@ class Polymesh():
             self.cfdBoundaryPatchesArray[iBPatch]['facesSf']=[self.faceSf[i] for i in iBFaces]       
             
             self.cfdBoundaryPatchesArray[iBPatch]['facesSf']=np.asarray(self.cfdBoundaryPatchesArray[iBPatch]['facesSf'])
-            
+
+
