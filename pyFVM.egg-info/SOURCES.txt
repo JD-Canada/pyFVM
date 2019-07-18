@@ -1,8 +1,12 @@
 README.md
+setup.py
+pyFVM/Coefficients.py
 pyFVM/Equation.py
 pyFVM/Field.py
+pyFVM/Fluxes.py
 pyFVM/FoamDictionaries.py
 pyFVM/IO.py
+pyFVM/Interpolate.py
 pyFVM/Math.py
 pyFVM/Polymesh.py
 pyFVM/Region.py

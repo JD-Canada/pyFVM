@@ -345,10 +345,10 @@ class FoamDictionaries():
         else:
             print("Error in controlDict: startFrom is not valid!")
         
-        for root, directory,files in os.walk(self.Region.caseDirectoryPath + "\\"+str(self.Region.timeDirectory)):
+        for root, directory,files in os.walk(self.Region.caseDirectoryPath + os.sep +str(self.Region.timeDirectory)):
 
             if not files:
-                print('Fields are not found in the %s directory' % (self.Region.caseDirectoryPath + "\\"+self.Region.timeDirectory+"!"))
+                print('Fields are not found in the %s directory' % (self.Region.caseDirectoryPath + os.sep +self.Region.timeDirectory+"!"))
 
         theNumberOfInteriorFaces = self.Region.mesh.numberOfInteriorFaces
         theNumberOfElements = self.Region.mesh.numberOfElements                       
@@ -357,7 +357,7 @@ class FoamDictionaries():
             
             fieldName=file
             
-            fieldFilePath=self.Region.caseDirectoryPath + "\\"+self.Region.timeDirectory+"\\"+fieldName
+            fieldFilePath=self.Region.caseDirectoryPath + os.sep +self.Region.timeDirectory+os.sep +fieldName
             
             header=io.cfdGetFoamFileHeader(fieldFilePath)
             
@@ -624,6 +624,263 @@ class FoamDictionaries():
             
                     self.Region.fluid['k'].cfdUpdateScale()
 
+        thermophysicalPropertiesFilePath=self.Region.caseDirectoryPath+"/constant/thermophysicalProperties"
+                        
+        if not os.path.isfile(thermophysicalPropertiesFilePath):
+            pass
+    
+        else:
+            print('\n')
+            print('Reading thermophysical properties ...')
+    
+            thermophysicalDicts=io.cfdReadAllDictionaries(thermophysicalPropertiesFilePath)
+            thermophysicalKeys=list(thermophysicalDicts)   
+
+            self.thermophysicalProperties={}
+            self.thermophysicalProperties['thermoType'] = thermophysicalDicts['thermoType']
+        
+            
+            if self.thermophysicalProperties['thermoType']['mixture']==['pureMixture']:
+                specieBlock = self.thermophysicalProperties['thermoType']['specie']
+
+                # Read and store the specie subdict
+                specieList = thermophysicalDicts['mixture']['specie']
+                
+                for i in specieList: 
+                    specieList[i]=float(specieList[i][0])
+                
+                self.thermophysicalProperties['mixture']={}
+                self.thermophysicalProperties['mixture']['specie']={}
+                self.thermophysicalProperties['mixture']['specie'].update(specieList)
+                
+                
+                # Read and store the thermodynamics subdict    
+                thermoList = thermophysicalDicts['mixture']['thermodynamics']    
+                
+                for i in thermoList: 
+                    thermoList[i]=float(thermoList[i][0])
+                    
+                self.thermophysicalProperties['mixture']['thermodynamics']={}
+                self.thermophysicalProperties['mixture']['thermodynamics'].update(thermoList)
+                
+                
+                # Read and store the transport properties subdict    
+                transportList = thermophysicalDicts['mixture']['transport']    
+                
+                for i in transportList: 
+                    transportList[i]=float(transportList[i][0])
+                    
+                self.thermophysicalProperties['mixture']['transport']={}
+                self.thermophysicalProperties['mixture']['transport'].update(transportList)
+                
+                
+                # Read and store the transport model 
+                if self.thermophysicalProperties['thermoType']['transport']==['const']:
+        
+                    print('\n Using transport model: const')
+                    # Update mu 
+                    muValue = self.thermophysicalProperties['mixture']['transport']['mu']
+ 
+                    self.Region.fluid['mu']=field.Field(self.Region,'mu','volScalarField')
+                    self.Region.fluid['mu'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
+                    self.Region.fluid['mu'].phi= [[muValue] for i in range(self.Region.mesh.numberOfElements+self.Region.mesh.numberOfBElements)]
+    
+                    numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
+
+                    boundaryPatch={}                     
+                    for iPatch in range(0,numberOfBPatches):
+                        boundaryPatch['value'] = muValue;
+                        boundaryPatch['type'] = 'zeroGradient';
+                        self.Region.fluid['mu'].boundaryPatch = boundaryPatch;
+                        
+
+                    # Update Pr
+                    PrValue = self.thermophysicalProperties['mixture']['transport']['Pr']
+ 
+                    self.Region.fluid['Pr']=field.Field(self.Region,'Pr','volScalarField')
+                    self.Region.fluid['Pr'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
+                    self.Region.fluid['Pr'].phi= [[PrValue] for i in range(self.Region.mesh.numberOfElements+self.Region.mesh.numberOfBElements)]
+    
+                    numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
+
+                    boundaryPatch={}                     
+                    for iPatch in range(0,numberOfBPatches):
+                        boundaryPatch['value'] = PrValue;
+                        boundaryPatch['type'] = 'zeroGradient';
+                        self.Region.fluid['Pr'].boundaryPatch = boundaryPatch;
+
+                elif self.thermophysicalProperties['thermoType']['transport']==['sutherland']:
+                    print('\n Using transport model: sutherland')    
+
+                    if not 'T' in self.Region.fluid.keys():
+                        print('Sutherland model requires T, which is not there \n')
+                        
+                    else:
+                        AsValue = self.thermophysicalProperties['mixture']['transport']['As'] # No pun intended
+                        TsValue = self.thermophysicalProperties['mixture']['transport']['Ts']
+                        TField = vars(self.Region.fluid['T'])
+                        TField = np.array(TField['phi'])
+                        # Update mu according to the sutherland law
+     
+                        self.Region.fluid['mu']=field.Field(self.Region,'mu','volScalarField')
+                        self.Region.fluid['mu'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
+
+                        self.Region.fluid['mu'].phi= AsValue*np.sqrt(TField)/(1+np.divide(TsValue,TField))
+        
+                        numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
+    
+                        boundaryPatch={}                     
+                        for iPatch in range(0,numberOfBPatches):
+#                            boundaryPatch['value'] = muValue;
+                            boundaryPatch['type'] = 'zeroGradient';
+                            self.Region.fluid['mu'].boundaryPatch = boundaryPatch;
+                        
+                elif self.thermophysicalProperties['thermoType']['transport']==['polynomial']:
+                    print('polynomial transport model not yet implemented, sorry\n')
+                    sys.exit()
+
+                else:
+                    print('\nERROR: transport model in thermophysicalProperties not recognized. Valid entries are:')
+                    print('const')
+                    print('sutherland')
+                    sys.exit()
+
+####             Read and store the thermodynamics model 
+                if self.thermophysicalProperties['thermoType']['thermo']==['hConst']:
+                    print('\n Using thermodynamics model: hConst')                        
+#               Update Cp 
+                    CpValue = self.thermophysicalProperties['mixture']['thermodynamics']['Cp']
+ 
+                    self.Region.fluid['Cp']=field.Field(self.Region,'Cp','volScalarField')
+                    self.Region.fluid['Cp'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
+                    self.Region.fluid['Cp'].phi= [[CpValue] for i in range(self.Region.mesh.numberOfElements+self.Region.mesh.numberOfBElements)]
+    
+                    numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
+
+                    boundaryPatch={}                     
+                    for iPatch in range(0,numberOfBPatches):
+                        boundaryPatch['value'] = CpValue;
+                        boundaryPatch['type'] = 'zeroGradient';
+                        self.Region.fluid['Cp'].boundaryPatch = boundaryPatch;
+
+#               Update k, thermal conductivity
+                    PrValue = self.thermophysicalProperties['mixture']['transport']['Pr'] 
+
+                    muField = vars(self.Region.fluid['mu'])
+                    muField = np.array(muField['phi'])
+
+                    CpField = vars(self.Region.fluid['Cp'])
+                    CpField = np.array(CpField['phi'])
+ 
+                    self.Region.fluid['k']=field.Field(self.Region,'k','volScalarField')
+                    self.Region.fluid['k'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
+
+                    self.Region.fluid['k'].phi= np.multiply(muField,CpField)/PrValue
+    
+                    numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
+
+                    boundaryPatch={}                     
+                    for iPatch in range(0,numberOfBPatches):
+                        # boundaryPatch['value'] = kValue;
+                        boundaryPatch['type'] = 'zeroGradient';
+                        self.Region.fluid['k'].boundaryPatch = boundaryPatch;
+
+                elif self.thermophysicalProperties['thermoType']['thermo']==['hPolynomial']:
+                    print('hPolynomial transport model not yet implemented, sorry\n')
+                    sys.exit()
+
+                else:
+                    print('\nERROR: thermodynamics model in thermophysicalProperties not recognized. Valid entries are:')
+                    print('hConst')
+                    sys.exit()
+
+
+####             Read and store the Equation of State model 
+                if self.thermophysicalProperties['thermoType']['equationOfState']==['perfectGas']:               
+                    print('\n Using equationOfState model: perfectGas') 
+
+                    self.Region.compressible=True
+
+#               Update rho, density
+
+                    TField = vars(self.Region.fluid['T'])
+                    TField = np.array(TField['phi'])
+
+                    PField = vars(self.Region.fluid['P'])
+                    PField = np.array(PField['phi'])
+
+                    molWeightValue = self.thermophysicalProperties['mixture']['specie']['molWeight'] 
+                    RuValue = 8.314e3 # Universal gas constant in SI 
+                    RbarValue = RuValue / molWeightValue # Gas constant in SI 
+
+                    self.Region.fluid['rho']=field.Field(self.Region,'rho','volScalarField')
+                    self.Region.fluid['rho'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
+
+                    self.Region.fluid['rho'].phi= np.divide(PField,RbarValue*TField)
+    
+                    numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
+
+                    boundaryPatch={}                     
+                    for iPatch in range(0,numberOfBPatches):
+                        # boundaryPatch['value'] = rhoValue;
+                        boundaryPatch['type'] = 'zeroGradient';
+                        self.Region.fluid['rho'].boundaryPatch = boundaryPatch;
+
+                    self.Region.fluid['rho'].cfdUpdateScale()
+
+#                   Update drhodp, (1/RT)
+                    self.Region.fluid['drhodp']=field.Field(self.Region,'drhodp','volScalarField')
+                    self.Region.fluid['drhodp'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
+
+                    self.Region.fluid['drhodp'].phi= np.divide(1,RbarValue*TField)
+    
+                    numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
+
+                    boundaryPatch={}                     
+                    for iPatch in range(0,numberOfBPatches):
+                        # boundaryPatch['value'] = drhodpValue;
+                        boundaryPatch['type'] = 'zeroGradient';
+                        self.Region.fluid['drhodp'].boundaryPatch = boundaryPatch;
+
+                elif self.thermophysicalProperties['thermoType']['equationOfState']==['Boussinesq']: 
+                    print('\n Using equationOfState model: Boussinesq') 
+
+                    self.Region.compressible=True
+
+#               Update rho, density
+
+                    TField = vars(self.Region.fluid['T'])
+                    TField = np.array(TField['phi'])
+
+                    TRefValue = self.thermophysicalProperties['mixture']['thermodynamics']['TRef'] 
+                    betaValue = self.thermophysicalProperties['mixture']['thermodynamics']['beta']                     
+                    rhoRefValue = self.thermophysicalProperties['mixture']['thermodynamics']['rhoRef']                     
+
+
+                    self.Region.fluid['rho']=field.Field(self.Region,'rho','volScalarField')
+                    self.Region.fluid['rho'].dimensions=[0., 0., 0., 0., 0., 0.,0.] 
+
+                    auxTerm = 1-betaValue*(TField-TRefValue)
+
+                    self.Region.fluid['rho'].phi= np.multiply(rhoRefValue,auxTerm)
+    
+                    numberOfBPatches=int(self.Region.mesh.numberOfBoundaryPatches)
+
+                    boundaryPatch={}                     
+                    for iPatch in range(0,numberOfBPatches):
+                        # boundaryPatch['value'] = rhoValue;
+                        boundaryPatch['type'] = 'zeroGradient';
+                        self.Region.fluid['rho'].boundaryPatch = boundaryPatch;
+
+                    self.Region.fluid['rho'].cfdUpdateScale()
+
+                elif self.thermophysicalProperties['thermoType']['equationOfState']==['incompressiblePerfectGas']: 
+                    print('incompressiblePerfectGas equationOfState model not yet implemented, sorry\n')
+
+                else:
+                    print('\nERROR: equationOfState model in thermophysicalProperties not recognized. Valid entries are:')
+                    print('Boussinesq')
+                    print('perfectGas')
 
                             
                        
