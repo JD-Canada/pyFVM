@@ -44,6 +44,11 @@ class Polymesh():
         self.interiorFaceOwners = self.owners[0:self.numberOfInteriorFaces]
         self.interiorFaceNeighbours = self.neighbours[0:self.numberOfInteriorFaces]
         self.interiorFaceWeights = self.faceWeights[0:self.numberOfInteriorFaces]
+        self.interiorFaceSf = self.faceSf[0:self.numberOfInteriorFaces]
+        
+        self.owners_b = self.owners[self.numberOfInteriorFaces:self.numberOfFaces]
+        self.Sf_b=self.faceSf[self.numberOfInteriorFaces:self.numberOfFaces]
+
         
     def cfdReadPointsFile(self):
         

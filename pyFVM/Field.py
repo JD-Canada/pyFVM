@@ -76,6 +76,9 @@ class Field():
         self.cfdUpdateScale()
         
         
+
+        
+        
         
     def cfdUpdateScale(self):
     
@@ -263,6 +266,59 @@ class Field():
         
         
         self.phi[self.iBElements]=self.phi[self.owners_b]-self.U_normal
+        
+        
+    def cfdComputeGradientGaussLinear0(self):
+        
+        theSize=self.phi.shape[1]
+        
+        if theSize == 3:
+            theNumberOfComponents=3
+        else:
+            theNumberOfComponents=1
+            
+        
+        #interior face contribution
+        iFaces=self.Region.mesh.numberOfInteriorFaces
+        
+        self.owners_f=self.Region.mesh.interiorFaceOwners
+        self.neighbours_f=self.Region.mesh.interiorFaceNeighbours
+        self.Sf=self.Region.mesh.interiorFaceSf
+        self.g_f=self.Region.mesh.interiorFaceWeights
+
+        self.phiGrad=np.zeros((self.theInteriorArraySize+self.theBoundaryArraySize, 3,theNumberOfComponents))
+        
+        ones=np.ones((iFaces))
+        self.phi_f=np.zeros((iFaces,theNumberOfComponents))
+       
+        for iComponent in range(theNumberOfComponents):
+            self.phi_f[0:iFaces,iComponent]=self.g_f*self.phi[self.neighbours_f][:,iComponent]+(ones-self.g_f)*self.phi[self.owners_f][:,iComponent]
+            
+            for iFace in range(iFaces):
+                
+                self.phiGrad[self.owners_f[iFace],:,iComponent]=self.phiGrad[self.owners_f[iFace],:,iComponent]+self.phi_f[iFace]*self.Sf[iFace]
+                self.phiGrad[self.neighbours_f[iFace],:,iComponent]=self.phiGrad[self.neighbours_f[iFace],:,iComponent]-self.phi_f[iFace]*self.Sf[iFace]
+
+
+
+
+        #Boundary face contributions
+        self.iBElements=np.arange(self.Region.mesh.numberOfElements,self.Region.mesh.numberOfElements+self.Region.mesh.numberOfBFaces,1)
+        self.phi_b=self.phi[self.iBElements]
+        
+        self.owners_b=self.Region.mesh.owners_b
+        self.Sf_b=self.Region.mesh.Sf_b
+        
+        
+        for iComponent in range(theNumberOfComponents):
+            
+            for iFace in range(self.Region.mesh.numberOfBFaces):
+                self.phiGrad[self.owners_b[iFace],:,iComponent]=self.phiGrad[self.owners_b[iFace],:,iComponent]+self.phi_b[iFace]*self.Sf_b[iFace]
+
+        
+        
+        
+        
         
         
         

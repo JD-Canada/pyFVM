@@ -84,6 +84,8 @@ class Region():
         self.coefficients=coefficients.Coefficients(self)
         self.fluxes=fluxes.Fluxes(self)
         
+        self.fluid['phi'].cfdComputeGradientGaussLinear0()
+        
     def cfdGeometricLengthScale(self):
     
         """
