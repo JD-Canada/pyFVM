@@ -19,7 +19,7 @@ application     uFVM;
 
 startFrom       latestTime;
 
-startTime       20;
+startTime       0;
 
 stopAt          endTime;
 
