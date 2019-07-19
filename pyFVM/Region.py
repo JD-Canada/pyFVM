@@ -69,6 +69,8 @@ class Region():
             self.fluid[i].updateFieldForAllBoundaryPatches()
                 
         self.dictionaries.cfdReadTransportProperties()
+        self.dictionaries.cfdReadThermophysicalProperties()
+
         
         #Define transient-convection equation
         self.model['phi']=equation.Equation(self,'phi')
