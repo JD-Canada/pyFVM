@@ -9,6 +9,7 @@ import pyFVM.Field as field
 import pyFVM.Interpolate as interpolate
 import pyFVM.Coefficients as coefficients
 import pyFVM.Fluxes as fluxes
+import pyFVM.Gradient as grad
 
 
 
@@ -86,7 +87,12 @@ class Region():
         self.coefficients=coefficients.Coefficients(self)
         self.fluxes=fluxes.Fluxes(self)
         
-        self.fluid['phi'].cfdComputeGradientGaussLinear0()
+        self.phiGradLinear=grad.Gradient(self,'phi')
+        self.phiGradLinear.cfdComputeGradientGaussLinear0()
+        
+        #There is something wrong with cfdUpdateScale it is not giving the same numbers as uFVM
+        self.fluid['phi'].cfdUpdateScale()
+        
         
     def cfdGeometricLengthScale(self):
     
