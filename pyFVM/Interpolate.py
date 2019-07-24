@@ -19,10 +19,12 @@ def interpolateFromElementsToFaces(region,scheme,field):
     #array of ones for subtraction operation below
     ones=np.ones((numberOfInteriorFaces))
     
+    #empty array to hold values of phi at the faces
     phi_f=np.zeros((numberOfFaces,theNumberOfComponents))
     
     if theInterpolationScheme == 'linear':
         
+        #interpolate centroid values to faces
         for iComponent in range(theNumberOfComponents):
             phi_f[0:numberOfInteriorFaces,iComponent]=g_f*region.fluid[field].phi[neighbours][:,iComponent]+(ones-g_f)*region.fluid[field].phi[owners][:,iComponent]
 

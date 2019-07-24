@@ -47,6 +47,8 @@ class Gradient():
         self.Sf_b=self.Region.mesh.Sf_b
         
         #phiGrad array to hold gradient values at interior and boundary centroids
+        #for scalars this array has shape (self.theNumberOfElements+self.theBoundaryArraySize,3,1)
+        #for vectors this array has shape (self.theNumberOfElements+self.theBoundaryArraySize,3,3)
         self.phiGrad=np.zeros((self.theNumberOfElements+self.theBoundaryArraySize, 3,self.theNumberOfComponents))
 
     def cfdUpdateGradient(self):
@@ -76,22 +78,34 @@ class Gradient():
         the 'Elements' using a first order gauss interpolation no correction for 
         non-conjuntionality is applied. 'phi' is the name of a field 
         used when the class is instantiated.
+        
+        To-do: Check this in-depth over a number of scenarios
         """
         
-        #interior face contribution
+        #interior face contribution, treats vectors as three scalars (u,v,w)
         for iComponent in range(self.theNumberOfComponents):
+            
+            #vectorized linear interpolation (same as Interpolate.interpolateFromElementsToFaces('linear'))
             self.phi_f[0:self.iFaces,iComponent]=self.g_f*self.phi[self.neighbours_f][:,iComponent]+(self.ones-self.g_f)*self.phi[self.owners_f][:,iComponent]
+            
             
             for iFace in range(self.iFaces):
                 
-                self.phiGrad[self.owners_f[iFace],:,iComponent]=self.phiGrad[self.owners_f[iFace],:,iComponent]+self.phi_f[iFace]*self.Sf[iFace]
-                self.phiGrad[self.neighbours_f[iFace],:,iComponent]=self.phiGrad[self.neighbours_f[iFace],:,iComponent]-self.phi_f[iFace]*self.Sf[iFace]
+                #this only updates phiGrad at the centroids of interior elements, 
+                #the contribution of boundary faces to boundary centroids is done
+                #directly below. 
+                
+                #accumlator of phi_f*Sf for the owner centroid of the face  
+                self.phiGrad[self.owners_f[iFace],:,iComponent]=self.phiGrad[self.owners_f[iFace],:,iComponent]+self.phi_f[iFace,iComponent]*self.Sf[iFace]
+                
+                #accumlator of phi_f*Sf for the neighbour centroid of the face  
+                self.phiGrad[self.neighbours_f[iFace],:,iComponent]=self.phiGrad[self.neighbours_f[iFace],:,iComponent]-self.phi_f[iFace,iComponent]*self.Sf[iFace]
 
         #Boundary face contributions
         for iComponent in range(self.theNumberOfComponents):
             
             for iFace in range(self.Region.mesh.numberOfBFaces):
-                self.phiGrad[self.owners_b[iFace],:,iComponent]=self.phiGrad[self.owners_b[iFace],:,iComponent]+self.phi_b[iFace]*self.Sf_b[iFace]
+                self.phiGrad[self.owners_b[iFace],:,iComponent]=self.phiGrad[self.owners_b[iFace],:,iComponent]+self.phi_b[iFace,iComponent]*self.Sf_b[iFace]
 
         self.cfdUpdateGradient()
 

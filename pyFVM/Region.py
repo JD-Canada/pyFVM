@@ -89,6 +89,9 @@ class Region():
         
         self.phiGradLinear=grad.Gradient(self,'phi')
         self.phiGradLinear.cfdComputeGradientGaussLinear0()
+
+        self.UGradLinear=grad.Gradient(self,'U')
+        self.UGradLinear.cfdComputeGradientGaussLinear0()
         
         #There is something wrong with cfdUpdateScale it is not giving the same numbers as uFVM
         self.fluid['phi'].cfdUpdateScale()
@@ -111,6 +114,7 @@ class Region():
         rho_f=np.squeeze(interpolate.interpolateFromElementsToFaces(self,'linear','rho'))
         Sf=self.mesh.faceSf
         
+        #calculate mass flux through faces
         self.fluid['mdot_f'].phi=rho_f*(Sf*U_f).sum(1)
         
         
