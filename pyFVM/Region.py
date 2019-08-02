@@ -98,8 +98,16 @@ class Region():
         self.fluid['phi'].cfdUpdateScale()
         
         time.cfdInitTime(self)
+                
         
-        
+        # Looks like the time loop starts here:
+
+        time.cfdUpdateRunTime(self)
+
+
+        time.cfdPrintCurrentTime(self)
+
+
     def cfdGeometricLengthScale(self):
     
         """
@@ -120,4 +128,6 @@ class Region():
         #calculate mass flux through faces
         self.fluid['mdot_f'].phi=rho_f*(Sf*U_f).sum(1)
         
+
+
         

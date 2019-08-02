@@ -33,4 +33,8 @@ def cfdInitTime(self):
 
 
 def cfdUpdateRunTime(self):
-    print('Fo so Yo')
+    self.time['currentTime'] = self.time['currentTime'] + self.dictionaries.controlDict['deltaT']
+    # There should be a physical time registry here, I can't see where it does start in Matlab
+
+def cfdPrintCurrentTime(self):
+    print('\n\n Time: %0.4f [s]\n' % self.time['currentTime'])
