@@ -40,10 +40,16 @@ class Polymesh():
         self.cfdGetBoundaryElementsSubArrayForBoundaryPatch()
         self.cfdGetOwnersSubArrayForBoundaryPatch()
         self.cfdGetFaceSfSubArrayForBoundaryPatch()
+        self.cfdGetFaceCentroidsSubArrayForBoundaryPatch()
         
         self.interiorFaceOwners = self.owners[0:self.numberOfInteriorFaces]
         self.interiorFaceNeighbours = self.neighbours[0:self.numberOfInteriorFaces]
         self.interiorFaceWeights = self.faceWeights[0:self.numberOfInteriorFaces]
+        self.interiorFaceSf = self.faceSf[0:self.numberOfInteriorFaces]
+        
+        self.owners_b = self.owners[self.numberOfInteriorFaces:self.numberOfFaces]
+        self.Sf_b=self.faceSf[self.numberOfInteriorFaces:self.numberOfFaces]
+
         
     def cfdReadPointsFile(self):
         
@@ -229,8 +235,8 @@ class Polymesh():
                     boundaryName=tline.split()[0]
                     
                     self.cfdBoundaryPatchesArray[boundaryName]=io.cfdReadCfdDictionary(fpid)
-                    self.cfdBoundaryPatchesArray[boundaryName]['numberOfBFaces']= self.cfdBoundaryPatchesArray[boundaryName].pop('nFaces')
-                    self.cfdBoundaryPatchesArray[boundaryName]['startFaceIndex']= self.cfdBoundaryPatchesArray[boundaryName].pop('startFace')
+                    self.cfdBoundaryPatchesArray[boundaryName]['numberOfBFaces']= int(self.cfdBoundaryPatchesArray[boundaryName].pop('nFaces'))
+                    self.cfdBoundaryPatchesArray[boundaryName]['startFaceIndex']= int(self.cfdBoundaryPatchesArray[boundaryName].pop('startFace'))
                     count=count+1
                     self.cfdBoundaryPatchesArray[boundaryName]['index']= count
     
@@ -548,6 +554,15 @@ class Polymesh():
         
             self.cfdBoundaryPatchesArray[iBPatch]['iBElements']=list(range(int(startBElement),int(endBElement)))        
 
+    def cfdGetFaceCentroidsSubArrayForBoundaryPatch(self):
+        
+        for iBPatch, theBCInfo in self.cfdBoundaryPatchesArray.items():
+            
+            startBFace=self.cfdBoundaryPatchesArray[iBPatch]['startFaceIndex']
+            endBFace=startBFace+self.cfdBoundaryPatchesArray[iBPatch]['numberOfBFaces']
+            iBFaces=list(range(int(startBFace),int(endBFace))) 
+        
+            self.cfdBoundaryPatchesArray[iBPatch]['faceCentroids']=[self.faceCentroids[i] for i in iBFaces]
 
     def cfdGetOwnersSubArrayForBoundaryPatch(self):
         

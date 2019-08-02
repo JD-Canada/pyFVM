@@ -9,6 +9,7 @@ import pyFVM.Field as field
 import pyFVM.Interpolate as interpolate
 import pyFVM.Coefficients as coefficients
 import pyFVM.Fluxes as fluxes
+import pyFVM.Gradient as grad
 
 
 
@@ -69,6 +70,8 @@ class Region():
             self.fluid[i].updateFieldForAllBoundaryPatches()
                 
         self.dictionaries.cfdReadTransportProperties()
+        self.dictionaries.cfdReadThermophysicalProperties()
+
         
         #Define transient-convection equation
         self.model['phi']=equation.Equation(self,'phi')
@@ -83,6 +86,16 @@ class Region():
         
         self.coefficients=coefficients.Coefficients(self)
         self.fluxes=fluxes.Fluxes(self)
+        
+        self.phiGradLinear=grad.Gradient(self,'phi')
+        self.phiGradLinear.cfdComputeGradientGaussLinear0()
+
+        self.UGradLinear=grad.Gradient(self,'U')
+        self.UGradLinear.cfdComputeGradientGaussLinear0()
+        
+        #There is something wrong with cfdUpdateScale it is not giving the same numbers as uFVM
+        self.fluid['phi'].cfdUpdateScale()
+        
         
     def cfdGeometricLengthScale(self):
     
@@ -101,6 +114,7 @@ class Region():
         rho_f=np.squeeze(interpolate.interpolateFromElementsToFaces(self,'linear','rho'))
         Sf=self.mesh.faceSf
         
+        #calculate mass flux through faces
         self.fluid['mdot_f'].phi=rho_f*(Sf*U_f).sum(1)
         
         

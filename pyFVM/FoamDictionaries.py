@@ -1,4 +1,5 @@
 import os
+import sys
 import pyFVM.IO as io
 import pyFVM.Field as field
 import pyFVM.Math as mth
@@ -624,9 +625,13 @@ class FoamDictionaries():
             
                     self.Region.fluid['k'].cfdUpdateScale()
 
+
+    def cfdReadThermophysicalProperties(self):
+        
         thermophysicalPropertiesFilePath=self.Region.caseDirectoryPath+"/constant/thermophysicalProperties"
                         
         if not os.path.isfile(thermophysicalPropertiesFilePath):
+            print('%s' %thermophysicalPropertiesFilePath)
             pass
     
         else:

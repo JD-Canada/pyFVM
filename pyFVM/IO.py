@@ -26,7 +26,7 @@ def cfdPrintHeader():
     print('||                                                                             ||');
     print('||                             Starting simulation                             ||');
     print('||                                                                             ||');
-    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*_*-* *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||\n');
+    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||\n');
 
 def cfdGetFoamFileHeader(fieldFilePath):
 

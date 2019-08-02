@@ -19,8 +19,6 @@ class Field():
            
         Example usage:
             
-            
-        TODO:
         """
         
         self.Region=Region
@@ -75,6 +73,11 @@ class Field():
         
         self.cfdUpdateScale()
         
+        self.phiGrad=[]
+        
+        
+
+        
         
         
     def cfdUpdateScale(self):
@@ -99,6 +102,7 @@ class Field():
             iter(theMagnitude)
             phiMax=max(mth.cfdMag(self.phi))
             phiMin=min(mth.cfdMag(self.phi))
+            print(phiMax)
     
         except TypeError:
             
@@ -263,6 +267,12 @@ class Field():
         
         
         self.phi[self.iBElements]=self.phi[self.owners_b]-self.U_normal
+        
+        
+
+        
+        
+        
         
         
         
