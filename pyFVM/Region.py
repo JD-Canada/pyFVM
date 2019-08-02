@@ -10,6 +10,7 @@ import pyFVM.Interpolate as interpolate
 import pyFVM.Coefficients as coefficients
 import pyFVM.Fluxes as fluxes
 import pyFVM.Gradient as grad
+import pyFVM.Time as time
 
 
 
@@ -95,6 +96,8 @@ class Region():
         
         #There is something wrong with cfdUpdateScale it is not giving the same numbers as uFVM
         self.fluid['phi'].cfdUpdateScale()
+        
+        time.cfdInitTime(self)
         
         
     def cfdGeometricLengthScale(self):
