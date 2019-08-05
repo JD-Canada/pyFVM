@@ -10,6 +10,7 @@ import pyFVM.Interpolate as interpolate
 import pyFVM.Coefficients as coefficients
 import pyFVM.Fluxes as fluxes
 import pyFVM.Gradient as grad
+import pyFVM.Time as time
 
 
 
@@ -96,7 +97,17 @@ class Region():
         #There is something wrong with cfdUpdateScale it is not giving the same numbers as uFVM
         self.fluid['phi'].cfdUpdateScale()
         
+        time.cfdInitTime(self)
+                
         
+        # Looks like the time loop starts here:
+
+        time.cfdUpdateRunTime(self)
+
+
+        time.cfdPrintCurrentTime(self)
+
+
     def cfdGeometricLengthScale(self):
     
         """
@@ -117,4 +128,6 @@ class Region():
         #calculate mass flux through faces
         self.fluid['mdot_f'].phi=rho_f*(Sf*U_f).sum(1)
         
+
+
         

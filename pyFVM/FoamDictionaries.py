@@ -341,7 +341,12 @@ class FoamDictionaries():
             self.Region.timeDirectory=max(self.Region.timeSteps)
             
         elif self.controlDict['startFrom']=='firstTime':   
-            self.Region.timeDirectory='0' 
+            ## I think in this case, the timeDirectory should be the minimum in 
+            ## the list of time directories in the working folder (analogous to
+            ## the latestTime case)
+            self.cfdGetTimeSteps()
+            self.Region.timeDirectory=min(self.Region.timeSteps)         
+            # self.Region.timeDirectory='0' 
             
         else:
             print("Error in controlDict: startFrom is not valid!")
