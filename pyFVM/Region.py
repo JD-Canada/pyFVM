@@ -98,12 +98,11 @@ class Region():
         self.fluid['phi'].cfdUpdateScale()
         
         time.cfdInitTime(self)
-                
         
-        # Looks like the time loop starts here:
-
+        io.cfdInitDirectories(self) 
+        io.cfdInitDirectories(self,'U')
+        # 
         time.cfdUpdateRunTime(self)
-
 
         time.cfdPrintCurrentTime(self)
 
