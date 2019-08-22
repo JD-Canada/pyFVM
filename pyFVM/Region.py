@@ -98,14 +98,38 @@ class Region():
         self.fluid['phi'].cfdUpdateScale()
         
         time.cfdInitTime(self)
-                
         
-        # Looks like the time loop starts here:
+        io.cfdInitDirectories(self) 
 
-        time.cfdUpdateRunTime(self)
+        ########################
+        # Starting the time Loop
+        
+        totalNumberOfIterations = 0
+        
+        # while (cfdDoTransientoLoop):
+        while( totalNumberOfIterations < 3):
+            # Update time
+            time.cfdUpdateRunTime(self)
+    
+            # Copy current field into previos TIME field        
+            self.prevTimeStep = self.fluid
+    
+            # Print current simul time
+            time.cfdPrintCurrentTime(self)
+    
+            ## Inner loop
+            for nIter in range(40):
+                totalNumberOfIterations += 1
+        
+                # print Headers
+                io.cfdPrintInteration(totalNumberOfIterations)        
+                io.cfdPrintResidualsHeader()
+                
+                # Copy current field into previous ITER field
+                self.prevIter = self.fluid
 
 
-        time.cfdPrintCurrentTime(self)
+        ###########################
 
 
     def cfdGeometricLengthScale(self):
