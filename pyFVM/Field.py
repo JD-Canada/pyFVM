@@ -269,11 +269,37 @@ class Field():
         self.phi[self.iBElements]=self.phi[self.owners_b]-self.U_normal
         
         
+# I'm not sure these functions belong to the field class, they just bring up info of an already existing field
+def cfdGetSubArrayForInterior(self,theFieldName,*args):
 
+    
+    if self.fluid[theFieldName].type == 'surfaceScalarField':
+        phi = self.fluid[theFieldName].phi[0:self.mesh.numberOfInteriorFaces]
+       
+    elif self.fluid[theFieldName].type == 'volScalarField':
+        phi = self.fluid[theFieldName].phi[0:self.mesh.numberOfElements]    
         
+    elif self.fluid[theFieldName].type == 'volVectorField':
+        if args:
+            iComponent = args
+            phi = self.fluid[theFieldName].phi[0:self.mesh.numberOfElements, iComponent] 
+        else:
+            phi = self.fluid[theFieldName].phi[0:self.mesh.numberOfElements, :] 
+
+    return phi
         
+
+def cfdGetPrevTimeStepSubArrayForInterior(self,theFieldName,*args):
+
+    
+    if not args:
+        iComponent = 0
+    else:
+        iComponent = args[0]
         
-        
-        
-        
-        
+    if self.fluid[theFieldName].type == 'scfdUrfaceScalarField':
+        phi = self.prevTimeStep[theFieldName].phi[0:self.mesh.numberOfInteriorFaces]
+    else:
+        phi = self.prevTimeStep[theFieldName].phi[0:self.mesh.numberOfElements,iComponent]
+    
+    return phi
