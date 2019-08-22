@@ -1,4 +1,5 @@
 import os
+#import os.path
 
 def cfdPrintMainHeader():
     
@@ -22,11 +23,22 @@ def cfdPrintMainHeader():
 
 def cfdPrintHeader():
     print('\n\n')
-    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* pyFVM *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||');
-    print('||                                                                             ||');
-    print('||                             Starting simulation                             ||');
-    print('||                                                                             ||');
-    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||\n');
+    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* pyFVM *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||')
+    print('||                                                                             ||')
+    print('||                             Starting simulation                             ||')
+    print('||                                                                             ||')
+    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||\n')
+
+def cfdPrintInteration(iterationNumber):
+    print('|==========================================================================|\n')
+    print('                            Global Iter %d\n' % iterationNumber);
+    print('|--------------------------------------------------------------------------|\n')
+    
+def cfdPrintResidualsHeader():
+    print('|--------------------------------------------------------------------------|\n')
+    print('|  Equation  |     RMS     |     MAX     | initialResidual | finalResidual |\n')
+    print('|--------------------------------------------------------------------------|\n')
+
 
 def cfdGetFoamFileHeader(fieldFilePath):
 
@@ -310,3 +322,55 @@ def cfdReadUniformVolVectorFieldValue(volVectorFieldEntry):
         
     return uniform, vector
 
+def cfdInitDirectories(self, *args, **kargs):
+    cwd = self.caseDirectoryPath
+    
+    convergencePath = cwd+os.sep+'convergence'
+    if not os.path.exists(convergencePath):
+        os.makedirs(convergencePath)
+    
+    if args:
+        fileName = cwd+os.sep+'convergence'+os.sep+'convergence.out'
+        theEquationName = args[0]
+        tFile = open(fileName,'w')
+        tFile.write('%s\t%s\t%s' % ('noIter', 'Time[s]', theEquationName+'ResInit'))
+        tFile.close()
+      
+    else:
+        fileName = cwd+os.sep+'convergence'+os.sep+'convergenceUp.out'
+        tFile = open(fileName,'w')
+        tFile.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % ('noIter','Time[s]','UxResInit','UyResInit','UzResInit','pResInit','kResInit','epsilonResInit','omegaResInit','TResInit'))
+        tFile.close()      
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
