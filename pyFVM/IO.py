@@ -23,11 +23,22 @@ def cfdPrintMainHeader():
 
 def cfdPrintHeader():
     print('\n\n')
-    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* pyFVM *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||');
-    print('||                                                                             ||');
-    print('||                             Starting simulation                             ||');
-    print('||                                                                             ||');
-    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||\n');
+    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* pyFVM *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||')
+    print('||                                                                             ||')
+    print('||                             Starting simulation                             ||')
+    print('||                                                                             ||')
+    print('||*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*||\n')
+
+def cfdPrintInteration(iterationNumber):
+    print('|==========================================================================|\n')
+    print('                            Global Iter %d\n' % iterationNumber);
+    print('|--------------------------------------------------------------------------|\n')
+    
+def cfdPrintResidualsHeader():
+    print('|--------------------------------------------------------------------------|\n')
+    print('|  Equation  |     RMS     |     MAX     | initialResidual | finalResidual |\n')
+    print('|--------------------------------------------------------------------------|\n')
+
 
 def cfdGetFoamFileHeader(fieldFilePath):
 
