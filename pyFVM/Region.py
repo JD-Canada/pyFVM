@@ -131,7 +131,6 @@ class Region():
 
         ###########################
 
-
     def cfdGeometricLengthScale(self):
     
         """
