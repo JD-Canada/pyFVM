@@ -3,7 +3,13 @@ import numpy as np
 import pyFVM.IO as io
 
 class Polymesh():
-    
+    """ Handles all mesh related methods.
+        
+        The Polymesh class takes care of all mesh related operations: 
+        Read the polymesh directory and instance the mesh elements (points, faces, neighbours, owners... ) in memory
+        Process topology and connectivity
+        
+    """    
     
     def __init__(self, Region):
         """Sets paths of mesh files, reads in mesh file data and calls numerous functions to process the mesh toplogy.
@@ -72,7 +78,10 @@ class Polymesh():
         self.Sf_b=self.faceSf[self.numberOfInteriorFaces:self.numberOfFaces]
         
     def cfdReadPointsFile(self):
-       
+        """ Reads the constant/polyMesh/points file in polymesh directory and stores the points coordinates
+        into region.mesh.nodeCentroids
+        """
+
         with open(self.pointsFile,"r") as fpid:
             
             print('Reading points file ...')
@@ -109,11 +118,16 @@ class Polymesh():
                 points_y.append(float(tline[1]))
                 points_z.append(float(tline[2]))
         
+        ## (array) with the mesh point coordinates 
         self.nodeCentroids = np.array((points_x, points_y, points_z), dtype=float).transpose()
 
 
     def cfdReadFacesFile(self):
-        
+        """ Reads the constant/polyMesh/faces file and stores the nodes pertaining to each face
+            in region.mesh.faceNodes
+            Starts with interior faces and then goes through the boundary faces. 
+        """ 
+
         with open(self.facesFile,"r") as fpid:
             print('Reading faces file ...')
             self.faceNodes=[]
@@ -152,12 +166,19 @@ class Polymesh():
                 
                 self.faceNodes.append(faceNodesi)
                 
+        ## (array) with the nodes for each face
         self.faceNodes=np.asarray(self.faceNodes)
         print(self.faceNodes)
 
     def cfdReadOwnerFile(self):
+        """ Reads the polyMesh/constant/owner file and returns a list 
+        where the indexes are the faces and the corresponding element value is the owner cell
+        """ 
+
         with open(self.ownerFile,"r") as fpid:
             print('Reading owner file ...')
+
+            ## (list) 1D, indices refer to faces, list value is the face's owner cell
             self.owners=[]
             start=False
             
@@ -189,8 +210,15 @@ class Polymesh():
                         self.owners.append(int(tline.split()[0]))
 
     def cfdReadNeighbourFile(self):
+        """ Reads the polyMesh/constant/neighbour file and returns a list 
+        where the indexes are the faces and the corresponding element value is the neighbour cell
+        """ 
+
+
         with open(self.neighbourFile,"r") as fpid:
             print('Reading neighbour file ...')
+
+            ## (list) 1D, indices refer to faces, list value is the face's owner cell
             self.neighbours=[]
             start=False
             
@@ -223,7 +251,7 @@ class Polymesh():
                        
     
     def cfdReadBoundaryFile(self):
-        
+       
         with open(self.boundaryFile,"r") as fpid:
             print('Reading boundary file ...')
            
