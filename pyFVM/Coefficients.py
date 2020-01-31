@@ -1,17 +1,12 @@
 import numpy as np
 
-
-
 class Coefficients():
     
     def __init__(self,Region):
         
         self.region=Region
-        
-        
         self.setupCoefficients()
 
-        
     def setupCoefficients(self,**kwargs):
         
         #uFVM has different levels within their Region.coefficients.
@@ -48,5 +43,3 @@ class Coefficients():
         
         self.cconn=theCConn
         self.csize=theCSize
-        
-        

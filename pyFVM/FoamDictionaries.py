@@ -7,6 +7,11 @@ import numpy as np
 
 
 class FoamDictionaries():
+
+    """Functions to read and manipulate foam dictionaries.
+    
+    Each dictionary that is read is accessible by calling the attribute related to the dictionary in question. For example, the values contained in 'controlDict' are accessed from within the self.controlDict attribute.  
+    """
     
     def __init__(self, Region):
         
@@ -21,12 +26,17 @@ class FoamDictionaries():
 
         
     def cfdReadControlDictFile(self):
+
+        """Reads contents of controlDict file in ./system folder.
+        """
         print('Reading controlDict file ...')
         
         controlDictFileDirectory = r"%s/system/controlDict" % self.Region.caseDirectoryPath
         
         try:
             with open(controlDictFileDirectory,"r") as fpid:
+
+                ## Dictionary with keys and values read from the 'controlDict' file.
                 self.controlDict={}
                 for linecount, tline in enumerate(fpid):
                     
@@ -47,13 +57,16 @@ class FoamDictionaries():
         except FileNotFoundError:
             print('"controlDict" file is not found!!!' )
 
-
     def cfdReadFvSchemesFile(self):
         
+        """Reads contents of fvSchemes file in system folder.
+        """
+
         print('Reading fvSchemes file ...')
         
         fvSchemesFileDirectory = r"%s/system/fvSchemes" % self.Region.caseDirectoryPath 
-        
+
+        ## Dictionary with keys and values read from the 'fvSchemes' file. 
         self.fvSchemes={}
         
         with open(fvSchemesFileDirectory,"r") as fpid:
@@ -99,7 +112,8 @@ class FoamDictionaries():
                     continue            
     
     def cfdReadFvSolutionFile(self):
-        
+        """Reads contents of fvSolution file in system folder.
+        """        
         print('Reading fvSolution file ...')
         
         fvSolutionFileDirectory = r"%s/system/fvSolution" % self.Region.caseDirectoryPath 
@@ -140,22 +154,8 @@ class FoamDictionaries():
                     continue
                 
     def cfdReadGravity(self):
-    
-        """Read the g file in the constant directory
-        and returns the gravity vector and dimensions. 
-        Attributes:
-            
-           Region (str): the cfd Region.
-           
-        Example usage:
-            
-            cfdReadGravity(Region)
-            
-        TODO:
-           
-           . 
+        """Reads contents of g file in ./constant folder.
         """    
-        
         gravityFilePath=self.Region.caseDirectoryPath + "/constant/g"
         
         if not os.path.isfile(gravityFilePath):
@@ -193,19 +193,12 @@ class FoamDictionaries():
      
         """Reads the turbulenceProperties dictionary 
            and sets the turbulence properties in Region.foamDictionary
+           
+           
            If there is no turbulenceProperties file, sets the turbulence
            model to 'laminar'.   
-    
-    
-        Attributes:
-            
-           Region (instance of cfdSetupRegion): the cfd Region.
-           
-        Example usage:
-            
-            cfdReadTurbulenceProperties(Region)
-            
-        """   
+        """
+
     
         self.turbulenceProperties={}
         
@@ -233,19 +226,6 @@ class FoamDictionaries():
     def cfdGetTimeSteps(self):
         
         """Finds valid time directories in case directory.
-        
-        Attributes:
-            
-           timeSteps (list): valid time steps.
-    
-        Returns:
-            
-           timeSteps
-           
-        Example usage:
-            
-            timeSteps = cfdGetTimeSteps(Region)
-            
         """
         
         print("Searching for time directories ... \n")
@@ -267,20 +247,7 @@ class FoamDictionaries():
 
     def cfdIsTimeDirectory(self,theDirectoryPath):
     
-        """Checks input directory if it is a valid time directory.
-        
-        Attributes:
-            
-           timeSteps (list): valid time steps.
-    
-        Returns:
-            
-           boolean
-           
-        Example usage:
-            
-            timeSteps = cfdIsTimeDirectory(theDirectoryPath,Region)
-            
+        """Checks input directory if it is a valid time directory.    
         """
         
         root, basename=os.path.split(theDirectoryPath)

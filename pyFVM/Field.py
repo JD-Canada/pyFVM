@@ -243,7 +243,6 @@ class Field():
     
     def updateSymmetry(self):
         
-        
         #get indices for self.iBPatch's boundary faces in self.phi array
         self.iBElements=self.Region.mesh.cfdBoundaryPatchesArray[self.iBPatch]['iBElements']
         

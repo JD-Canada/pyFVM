@@ -1,5 +1,3 @@
-
-
 import numpy as np
 
 class Fluxes():
@@ -7,17 +5,12 @@ class Fluxes():
     def __init__(self,Region):
         
         self.region=Region
-        
-        
         self.setupFluxes()
 
-        
     def setupFluxes(self,**kwargs):
         
-    
         theNumberOfFaces=self.region.mesh.numberOfFaces
         theNumberOfElements=self.region.mesh.numberOfElements
-        
         
         #face fluxes
         self.FluxCf=np.zeros((theNumberOfFaces))

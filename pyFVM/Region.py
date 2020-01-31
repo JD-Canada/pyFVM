@@ -23,6 +23,10 @@ class Region():
     other class instances, such as 'polyMesh', any number of 'fluid' instances
     and a number of other attributes required for the simulation to run.
 
+    All information related to the mesh's topology (i.e., distances of cell centers to wall, face surface areas, face normals and cell volumes) is available in the Region class. 
+
+    The 
+
     """
 
     def __init__(self,casePath):
@@ -30,8 +34,7 @@ class Region():
         """Initiates the class instance with the caseDirectoryPath attribute 
         and adds the 'dictionaries' and 'fluid' dictionaries. Reminder - 
         __init__ functions are run automatically when a new class instance is 
-        created. This docstring does not appear in Sphinx documentation.
-    
+        created. 
         """
         
         io.cfdPrintMainHeader()
@@ -41,39 +44,32 @@ class Region():
 
         print('Working case directory is %s' % self.caseDirectoryPath)
         
-        #empty dictionary to hold 'fluid' properties. I a better name is 'field'
+        ## Dictionary to hold 'fluid' properties. We are considering changing this to a more meaningful name such as 'field' because often this dictionary is used to store field and field variables which are not necessarily fluids.  
         self.fluid={}
         
-        #model is used to hold the various equations
+        ## Dictionary to hold various equations
         self.model={}
 
-        #creates an instance of the FoamDictionaires class
-        #most of FoamDictionaries methods are initiated in the __init__
-        #function, but two are not: 'cfdReadTimeDirectory' and cfdReadTransportProperties()
+        ## Dictionary holding information contained within the various c++ dictionaries used in OpenFOAM. For example, the contents of the './system/controlDict' file can be retrieved by calling Region.dictionaries.controlDict which return the dictionary containing all the entries in controlDict. 
         self.dictionaries=fd.FoamDictionaries(self)
         
-        #creates an instance of Polymesh, which runs all the methods necessary
-        #to get the mesh topology from the __init__ function of the class
+        ## Dictionary containing all the information related to the FVM mesh. 
         self.mesh=pm.Polymesh(self)
         
         print('\n')
-        self.cfdGeometricLengthScale()
 
-        #these two require the mesh and therefore are not included in the __init__
-        #function of FoamDictionaries and are instead run after initializing 
-        #self.mesh. 
+        """cfdGeometricLengthScale() and self.dictionaries.cfdReadTimeDirectory() require the mesh and therefore are not included in the __init__ function of FoamDictionaries and are instead called after the self.mesh=pm.Polymesh(self) line above."""
+        
+        self.cfdGeometricLengthScale()
         self.dictionaries.cfdReadTimeDirectory()
         
-        
-        #update boundary values for phi field 
+        #update boundary values
         for i in self.fluid:
-            
             self.fluid[i].updateFieldForAllBoundaryPatches()
                 
         self.dictionaries.cfdReadTransportProperties()
         self.dictionaries.cfdReadThermophysicalProperties()
 
-        
         #Define transient-convection equation
         self.model['phi']=equation.Equation(self,'phi')
         self.model['phi'].setTerms(['Transient', 'Convection'])
@@ -85,7 +81,10 @@ class Region():
         
         io.cfdPrintHeader()
         
+        ## Instance of Coefficients class which contains information related to how the connectivity of the mesh.
         self.coefficients=coefficients.Coefficients(self)
+
+        ## Instance of Fluxes class which contains flux information  
         self.fluxes=fluxes.Fluxes(self)
         
         self.phiGradLinear=grad.Gradient(self,'phi')

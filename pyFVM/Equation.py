@@ -32,11 +32,7 @@ class Equation():
     def setTerms(self, terms):
         
         self.terms = terms
-        
-        
-        
-        
-        
+                 
 def cfdAssembleAndCorrectScalarEquation(self,theEquationName):
 
     self.coefficients=coefficients.Coefficients(self)
@@ -51,12 +47,8 @@ def cfdAssembleAndCorrectScalarEquation(self,theEquationName):
     cfdPostAssembleScalarEquation(theEquationName)    
 
 
-
-
-
 def cfdPreAssembleEquation(theEquationName):
     pass
-
 
 def cfdAssembleEquationTerms(self, theEquationName): # This function assembles equation terms"
     pass
@@ -85,11 +77,8 @@ def cfdAssembleEquationTerms(self, theEquationName): # This function assembles e
             print('\n%s\n' % (iTerm + ' term is not defined'))
 
 
-
-
 def cfdPostAssembleScalarEquation(self, theEquationName):
     pass
-
 
 
 def cfdGetModel(self,theFieldName):
@@ -101,6 +90,3 @@ def cfdGetModel(self,theFieldName):
         theModel = -1
  
     return theModel
-
-
-
