@@ -1,0 +1,3 @@
+*.pyc
+/docs/latex/*
+/pyFVM/__pycache__/*
