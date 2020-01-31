@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['polymesh',['Polymesh',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html',1,'pyFVM::Polymesh']]],
-  ['previter',['prevIter',['../classpy_f_v_m_1_1_region_1_1_region.html#aab4dd6e5ae822364b6035fd27e44678a',1,'pyFVM::Region::Region']]],
-  ['prevtimestep',['prevTimeStep',['../classpy_f_v_m_1_1_region_1_1_region.html#a44d02ef0fc1fc27087f86cf6d79bfffe',1,'pyFVM::Region::Region']]]
+  ['interiorfaceneighbours',['interiorFaceNeighbours',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#aec3547856186abca27b631dc53e854d1',1,'pyFVM::Polymesh::Polymesh']]],
+  ['interiorfaceowners',['interiorFaceOwners',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a6267d65afe16f0e8236c8fb3d2199aaa',1,'pyFVM::Polymesh::Polymesh']]],
+  ['interiorfacesf',['interiorFaceSf',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a9ede5772cb503449214b8b45b6ffd409',1,'pyFVM::Polymesh::Polymesh']]],
+  ['interiorfaceweights',['interiorFaceWeights',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#acd48bc66bfa5c8273d84fc343e658d97',1,'pyFVM::Polymesh::Polymesh']]]
 ];

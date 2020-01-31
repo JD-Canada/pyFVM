@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['equation',['Equation',['../classpy_f_v_m_1_1_equation_1_1_equation.html',1,'pyFVM::Equation']]]
+  ['dictionaries',['dictionaries',['../classpy_f_v_m_1_1_region_1_1_region.html#addeb33384d08febd9d7ed462c1e93bed',1,'pyFVM::Region::Region']]]
 ];
