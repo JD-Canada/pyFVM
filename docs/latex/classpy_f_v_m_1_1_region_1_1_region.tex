@@ -1,0 +1,148 @@
+\hypertarget{classpy_f_v_m_1_1_region_1_1_region}{}\section{py\+F\+V\+M.\+Region.\+Region Class Reference}
+\label{classpy_f_v_m_1_1_region_1_1_region}\index{pyFVM.Region.Region@{pyFVM.Region.Region}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_ac630b03db4f4502a63f6581f9430d733}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, case\+Path)
+\item 
+def \mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_aa7a1cde8b5d0dcf3fe22ce5186512c87}{cfd\+Geometric\+Length\+Scale}} (self)
+\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_ace5538a4f0208f157825c4b1ad59c2e7}\label{classpy_f_v_m_1_1_region_1_1_region_ace5538a4f0208f157825c4b1ad59c2e7}} 
+def {\bfseries initialize\+Mdot\+FromU} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a8d325f8a7462a2cc6d3474432971cded}\label{classpy_f_v_m_1_1_region_1_1_region_a8d325f8a7462a2cc6d3474432971cded}} 
+{\bfseries case\+Directory\+Path}
+\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a026764520c95da4c7af5b408e49ef491}\label{classpy_f_v_m_1_1_region_1_1_region_a026764520c95da4c7af5b408e49ef491}} 
+{\bfseries S\+T\+E\+A\+D\+Y\+\_\+\+S\+T\+A\+T\+E\+\_\+\+R\+UN}
+\item 
+\mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_a18bfc9b2d9c9bd6403db21b5b458a7ac}{fluid}}
+\begin{DoxyCompactList}\small\item\em Dictionary to hold \textquotesingle{}fluid\textquotesingle{} properties. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a1e511f8c07f166d8ef7ca5a28a9f8a9b}\label{classpy_f_v_m_1_1_region_1_1_region_a1e511f8c07f166d8ef7ca5a28a9f8a9b}} 
+\mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_a1e511f8c07f166d8ef7ca5a28a9f8a9b}{model}}
+\begin{DoxyCompactList}\small\item\em Dictionary to hold various equations. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_addeb33384d08febd9d7ed462c1e93bed}{dictionaries}}
+\begin{DoxyCompactList}\small\item\em Dictionary holding information contained within the various c++ dictionaries used in Open\+F\+O\+AM. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_a2a569d069162a54de1c13f2ba72ce2df}{mesh}}
+\begin{DoxyCompactList}\small\item\em Dictionary containing all the information related to the F\+VM mesh. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_a6f91d0e074a2b28b8ed05a00a37cb4f3}{coefficients}}
+\begin{DoxyCompactList}\small\item\em Instance of Coefficients class which contains information related to how the connectivity of the mesh. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a470eb7f9bb289ea6bec0123ef9e445c7}\label{classpy_f_v_m_1_1_region_1_1_region_a470eb7f9bb289ea6bec0123ef9e445c7}} 
+\mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_a470eb7f9bb289ea6bec0123ef9e445c7}{fluxes}}
+\begin{DoxyCompactList}\small\item\em Instance of Fluxes class which contains flux information. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_af61f7075862260a37e536e1b4c00f58b}\label{classpy_f_v_m_1_1_region_1_1_region_af61f7075862260a37e536e1b4c00f58b}} 
+{\bfseries phi\+Grad\+Linear}
+\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a28c26ee6d3c29442a69bc38ecea50951}\label{classpy_f_v_m_1_1_region_1_1_region_a28c26ee6d3c29442a69bc38ecea50951}} 
+{\bfseries U\+Grad\+Linear}
+\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a44d02ef0fc1fc27087f86cf6d79bfffe}\label{classpy_f_v_m_1_1_region_1_1_region_a44d02ef0fc1fc27087f86cf6d79bfffe}} 
+\mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_a44d02ef0fc1fc27087f86cf6d79bfffe}{prev\+Time\+Step}}
+\begin{DoxyCompactList}\small\item\em Starting the time Loop. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classpy_f_v_m_1_1_region_1_1_region_aab4dd6e5ae822364b6035fd27e44678a}{prev\+Iter}}
+\begin{DoxyCompactList}\small\item\em Inner loop. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_ab92a475b4246bf3297fe7ab4a8283fca}\label{classpy_f_v_m_1_1_region_1_1_region_ab92a475b4246bf3297fe7ab4a8283fca}} 
+{\bfseries total\+Volume}
+\item 
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a6c67d59a18512ef5da7a5cfa48d4602d}\label{classpy_f_v_m_1_1_region_1_1_region_a6c67d59a18512ef5da7a5cfa48d4602d}} 
+{\bfseries length\+Scale}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Sets up the simulation's 'Region'.
+
+An instance of the Region class is required for the case to run. 
+The instance is created at the beginning of each case and is used to hold
+other class instances, such as 'polyMesh', any number of 'fluid' instances
+and a number of other attributes required for the simulation to run.
+
+All information related to the mesh's topology (i.e., distances of cell centers to wall, face surface areas, face normals and cell volumes) is available in the Region class. 
+
+The \end{DoxyVerb}
+ 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_ac630b03db4f4502a63f6581f9430d733}\label{classpy_f_v_m_1_1_region_1_1_region_ac630b03db4f4502a63f6581f9430d733}} 
+\index{pyFVM.Region.Region@{pyFVM.Region.Region}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!pyFVM.Region.Region@{pyFVM.Region.Region}}
+\subsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def py\+F\+V\+M.\+Region.\+Region.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{case\+Path }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Initiates the class instance with the caseDirectoryPath attribute 
+and adds the 'dictionaries' and 'fluid' dictionaries. Reminder - 
+__init__ functions are run automatically when a new class instance is 
+created. 
+\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_aa7a1cde8b5d0dcf3fe22ce5186512c87}\label{classpy_f_v_m_1_1_region_1_1_region_aa7a1cde8b5d0dcf3fe22ce5186512c87}} 
+\index{pyFVM.Region.Region@{pyFVM.Region.Region}!cfdGeometricLengthScale@{cfdGeometricLengthScale}}
+\index{cfdGeometricLengthScale@{cfdGeometricLengthScale}!pyFVM.Region.Region@{pyFVM.Region.Region}}
+\subsubsection{\texorpdfstring{cfdGeometricLengthScale()}{cfdGeometricLengthScale()}}
+{\footnotesize\ttfamily def py\+F\+V\+M.\+Region.\+Region.\+cfd\+Geometric\+Length\+Scale (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Calculates the geometric length scale of the mesh. 
+\end{DoxyVerb}
+ 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a6f91d0e074a2b28b8ed05a00a37cb4f3}\label{classpy_f_v_m_1_1_region_1_1_region_a6f91d0e074a2b28b8ed05a00a37cb4f3}} 
+\index{pyFVM.Region.Region@{pyFVM.Region.Region}!coefficients@{coefficients}}
+\index{coefficients@{coefficients}!pyFVM.Region.Region@{pyFVM.Region.Region}}
+\subsubsection{\texorpdfstring{coefficients}{coefficients}}
+{\footnotesize\ttfamily py\+F\+V\+M.\+Region.\+Region.\+coefficients}
+
+
+
+Instance of Coefficients class which contains information related to how the connectivity of the mesh. 
+
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_addeb33384d08febd9d7ed462c1e93bed}\label{classpy_f_v_m_1_1_region_1_1_region_addeb33384d08febd9d7ed462c1e93bed}} 
+\index{pyFVM.Region.Region@{pyFVM.Region.Region}!dictionaries@{dictionaries}}
+\index{dictionaries@{dictionaries}!pyFVM.Region.Region@{pyFVM.Region.Region}}
+\subsubsection{\texorpdfstring{dictionaries}{dictionaries}}
+{\footnotesize\ttfamily py\+F\+V\+M.\+Region.\+Region.\+dictionaries}
+
+
+
+Dictionary holding information contained within the various c++ dictionaries used in Open\+F\+O\+AM. 
+
+For example, the contents of the \textquotesingle{}./system/control\+Dict\textquotesingle{} file can be retrieved by calling Region.\+dictionaries.\+control\+Dict which return the dictionary containing all the entries in control\+Dict. \mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a18bfc9b2d9c9bd6403db21b5b458a7ac}\label{classpy_f_v_m_1_1_region_1_1_region_a18bfc9b2d9c9bd6403db21b5b458a7ac}} 
+\index{pyFVM.Region.Region@{pyFVM.Region.Region}!fluid@{fluid}}
+\index{fluid@{fluid}!pyFVM.Region.Region@{pyFVM.Region.Region}}
+\subsubsection{\texorpdfstring{fluid}{fluid}}
+{\footnotesize\ttfamily py\+F\+V\+M.\+Region.\+Region.\+fluid}
+
+
+
+Dictionary to hold \textquotesingle{}fluid\textquotesingle{} properties. 
+
+We are considering changing this to a more meaningful name such as \textquotesingle{}field\textquotesingle{} because often this dictionary is used to store field and field variables which are not necessarily fluids. \mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_a2a569d069162a54de1c13f2ba72ce2df}\label{classpy_f_v_m_1_1_region_1_1_region_a2a569d069162a54de1c13f2ba72ce2df}} 
+\index{pyFVM.Region.Region@{pyFVM.Region.Region}!mesh@{mesh}}
+\index{mesh@{mesh}!pyFVM.Region.Region@{pyFVM.Region.Region}}
+\subsubsection{\texorpdfstring{mesh}{mesh}}
+{\footnotesize\ttfamily py\+F\+V\+M.\+Region.\+Region.\+mesh}
+
+
+
+Dictionary containing all the information related to the F\+VM mesh. 
+
+\mbox{\Hypertarget{classpy_f_v_m_1_1_region_1_1_region_aab4dd6e5ae822364b6035fd27e44678a}\label{classpy_f_v_m_1_1_region_1_1_region_aab4dd6e5ae822364b6035fd27e44678a}} 
+\index{pyFVM.Region.Region@{pyFVM.Region.Region}!prevIter@{prevIter}}
+\index{prevIter@{prevIter}!pyFVM.Region.Region@{pyFVM.Region.Region}}
+\subsubsection{\texorpdfstring{prevIter}{prevIter}}
+{\footnotesize\ttfamily py\+F\+V\+M.\+Region.\+Region.\+prev\+Iter}
+
+
+
+Inner loop. 
+
+Previous iteration of self.\+fluid 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Region.\+py\end{DoxyCompactItemize}

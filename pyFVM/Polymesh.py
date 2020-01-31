@@ -12,13 +12,24 @@ class Polymesh():
     """    
     
     def __init__(self, Region):
+        """Sets paths of mesh files, reads in mesh file data and calls numerous functions to process the mesh toplogy.
+        """
         
         self.Region=Region
         
+        ## Path to points files
         self.pointsFile = r"%s/constant/polyMesh/points" % self.Region.caseDirectoryPath
+
+        ## Path to faces file
         self.facesFile = r"%s/constant/polyMesh/faces" % self.Region.caseDirectoryPath
+
+        ## Path to owner file
         self.ownerFile = r"%s/constant/polyMesh/owner" % self.Region.caseDirectoryPath
+
+        ## Path to neighbour file
         self.neighbourFile = r"%s/constant/polyMesh/neighbour" % self.Region.caseDirectoryPath
+
+        ## Path to boundary file
         self.boundaryFile = r"%s/constant/polyMesh/boundary" % self.Region.caseDirectoryPath 
         
         print('\n')
@@ -48,19 +59,29 @@ class Polymesh():
         self.cfdGetFaceSfSubArrayForBoundaryPatch()
         self.cfdGetFaceCentroidsSubArrayForBoundaryPatch()
         
+        ## (list) 1D, indices refer to an interior face, list value is the face's owner
         self.interiorFaceOwners = self.owners[0:self.numberOfInteriorFaces]
+
+        ## (list) 1D, indices refer to an interior face, list value is the face's neighbor cell
         self.interiorFaceNeighbours = self.neighbours[0:self.numberOfInteriorFaces]
+
+        ## (list) 1D, face weighting factors. Values near 0.5 mean the face's centroid is approximately halfway between the center of the owner and neighbour cell centers, values less than 0.5 mean the face centroid is closer to the owner and those greater than 0.5 are closer to the neighbour cell).
         self.interiorFaceWeights = self.faceWeights[0:self.numberOfInteriorFaces]
+
+        ## (array) 2D, normal vectors (Sf) of the interior faces (indices refer to face index)
         self.interiorFaceSf = self.faceSf[0:self.numberOfInteriorFaces]
         
+        ## (list) 1D, indices refer to an boundary face, list value refers to the face's owner
         self.owners_b = self.owners[self.numberOfInteriorFaces:self.numberOfFaces]
-        self.Sf_b=self.faceSf[self.numberOfInteriorFaces:self.numberOfFaces]
 
+        ## (list) 1D, normal vectors (Sf) of the boundary faces (indices refer to face index). Boundary face normals always point out of the domain. 
+        self.Sf_b=self.faceSf[self.numberOfInteriorFaces:self.numberOfFaces]
         
     def cfdReadPointsFile(self):
         """ Reads the constant/polyMesh/points file in polymesh directory and stores the points coordinates
         into region.mesh.nodeCentroids
         """
+
         with open(self.pointsFile,"r") as fpid:
             
             print('Reading points file ...')
@@ -376,8 +397,6 @@ class Polymesh():
         
         self.elementCentroids= [[] for i in range(self.numberOfElements)]
         self.elementVolumes= [[] for i in range(self.numberOfElements)]
-        
-        
         
         """
         Calculate:

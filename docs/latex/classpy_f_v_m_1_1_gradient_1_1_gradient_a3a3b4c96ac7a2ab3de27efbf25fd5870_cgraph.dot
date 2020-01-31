@@ -1,0 +1,12 @@
+digraph "pyFVM.Gradient.Gradient.__init__"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="pyFVM.Gradient.Gradient.\l__init__",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node0 -> Node1 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 [label="pyFVM.Gradient.Gradient.update\lInletGradients",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpy_f_v_m_1_1_gradient_1_1_gradient.html#a7103975628f8e7b74db133370960d5d0",tooltip=" "];
+  Node0 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="pyFVM.Gradient.Gradient.update\lOutletGradients",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpy_f_v_m_1_1_gradient_1_1_gradient.html#a55e60ae975b6c90d1b3163834fd527b2",tooltip=" "];
+}
