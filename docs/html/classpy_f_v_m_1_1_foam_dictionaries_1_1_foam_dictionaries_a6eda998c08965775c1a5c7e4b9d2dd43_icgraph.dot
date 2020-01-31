@@ -1,0 +1,12 @@
+digraph "pyFVM.FoamDictionaries.FoamDictionaries.cfdIsTimeDirectory"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node9 [label="pyFVM.FoamDictionaries.Foam\lDictionaries.cfdIsTimeDirectory",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="pyFVM.FoamDictionaries.Foam\lDictionaries.cfdGetTimeSteps",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpy_f_v_m_1_1_foam_dictionaries_1_1_foam_dictionaries.html#abf1810532990f184f1cb6baa64e1c890",tooltip=" "];
+  Node10 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="pyFVM.FoamDictionaries.Foam\lDictionaries.cfdGetFields",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpy_f_v_m_1_1_foam_dictionaries_1_1_foam_dictionaries.html#acd0e5c0be262249022d98cfd7be21de6",tooltip=" "];
+}

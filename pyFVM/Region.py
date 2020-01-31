@@ -25,11 +25,10 @@ class Region():
 
     All information related to the mesh's topology (i.e., distances of cell centers to wall, face surface areas, face normals and cell volumes) is available in the Region class. 
 
-    The 
-
     """
 
     def __init__(self,casePath):
+        
         
         """Initiates the class instance with the caseDirectoryPath attribute 
         and adds the 'dictionaries' and 'fluid' dictionaries. Reminder - 
@@ -106,6 +105,7 @@ class Region():
         totalNumberOfIterations = 0
         
         # while (cfdDoTransientoLoop):
+        """
         while( totalNumberOfIterations < 3):
             # Update time
             time.cfdUpdateRunTime(self)
@@ -116,7 +116,7 @@ class Region():
             # Print current simul time
             time.cfdPrintCurrentTime(self)
     
-            ## Inner loop
+            # Inner loop
             for nIter in range(40):
                 totalNumberOfIterations += 1
         
@@ -124,9 +124,9 @@ class Region():
                 io.cfdPrintInteration(totalNumberOfIterations)        
                 io.cfdPrintResidualsHeader()
                 
-                # Copy current field into previous ITER field
+                ## Previous iteration of self.fluid
                 self.prevIter = self.fluid
-
+        """
 
         ###########################
 
