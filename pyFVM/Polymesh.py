@@ -251,10 +251,13 @@ class Polymesh():
                        
     
     def cfdReadBoundaryFile(self):
+        """Reads the polyMesh/boundary file and reads its contents in a dictionary (self.cfdBoundary)
+        """
        
         with open(self.boundaryFile,"r") as fpid:
             print('Reading boundary file ...')
-           
+            
+            ## (dict) key for each boundary patch
             self.cfdBoundaryPatchesArray={}
             for linecount, tline in enumerate(fpid):
                 
@@ -283,9 +286,14 @@ class Polymesh():
                     boundaryName=tline.split()[0]
                     
                     self.cfdBoundaryPatchesArray[boundaryName]=io.cfdReadCfdDictionary(fpid)
+                    ## number of faces for the boundary patch
                     self.cfdBoundaryPatchesArray[boundaryName]['numberOfBFaces']= int(self.cfdBoundaryPatchesArray[boundaryName].pop('nFaces'))
+                    
+                    ## start face index of the boundary patch in the self.faceNodes
                     self.cfdBoundaryPatchesArray[boundaryName]['startFaceIndex']= int(self.cfdBoundaryPatchesArray[boundaryName].pop('startFace'))
                     count=count+1
+
+                    ## index for boundary face, used for reference
                     self.cfdBoundaryPatchesArray[boundaryName]['index']= count
     
                     
@@ -301,6 +309,9 @@ class Polymesh():
 
 
     def cfdProcessElementTopology(self):
+
+        """
+        """
         
         self.elementNeighbours = [[] for i in range(0,self.numberOfElements)]
         self.elementFaces = [[] for i in range(0,self.numberOfElements)]
