@@ -296,7 +296,13 @@ class Polymesh():
     
                     
     def cfdCheckIfCavity(self):
+        """Checks if there are any inlets or outlets in the domain, based 
+        on the boundary types found in system/boundary
         
+        if any of the boundaries is an inlet or outlet returns
+        self.foundPatch = True
+        """
+               
         self.foundPatch=False
         
         for patch, value in self.cfdBoundaryPatchesArray.items():
@@ -304,7 +310,6 @@ class Polymesh():
             if value['type'] == 'inlet' or 'outlet':
                 self.foundPatch =True
                 break
-
 
     def cfdProcessElementTopology(self):
 
@@ -372,13 +377,23 @@ class Polymesh():
 
 
     def cfdProcessNodeTopology(self):
-        
+        """
+        Invokes the cfdInvertConnectivity method on self.elementNodes and self.faceNodes
+
+        """
         self.nodeElements = self.cfdInvertConnectivity(self.elementNodes)
         self.nodeFaces = self.cfdInvertConnectivity(self.faceNodes) 
         
         
     def cfdInvertConnectivity(self,theConnectivityArray):
+
+        """
+        Returns an array with the inverted connectivty of an input array. 
         
+        For example self.cfdInvertConnectivty(self.elementNodes) takes the elementNodes connectivity
+        array and returns an inverted array with the elements belonging to each node. 
+
+        """        
         
         theInvertedSize=0
         
@@ -612,7 +627,11 @@ class Polymesh():
         
         
     def cfdGetBoundaryElementsSubArrayForBoundaryPatch(self):
-        
+        """
+        Creates a list of the boundary elements pertaining to a patch in self.cfdBoundaryPatchesArray for each patch
+
+        """
+
         for iBPatch, theBCInfo in self.cfdBoundaryPatchesArray.items():
             
             startBElement=self.numberOfElements+self.cfdBoundaryPatchesArray[iBPatch]['startFaceIndex']-self.numberOfInteriorFaces
@@ -621,6 +640,9 @@ class Polymesh():
             self.cfdBoundaryPatchesArray[iBPatch]['iBElements']=list(range(int(startBElement),int(endBElement)))        
 
     def cfdGetFaceCentroidsSubArrayForBoundaryPatch(self):
+        """
+        Creates a list with the centroids for each face of the patch in self.cfdBoundaryPatchesArray[patch]['faceCentroids']
+        """
         
         for iBPatch, theBCInfo in self.cfdBoundaryPatchesArray.items():
             
@@ -631,6 +653,9 @@ class Polymesh():
             self.cfdBoundaryPatchesArray[iBPatch]['faceCentroids']=[self.faceCentroids[i] for i in iBFaces]
 
     def cfdGetOwnersSubArrayForBoundaryPatch(self):
+        """
+        Creates a list with the element owners of each boundary patch face in self.cfdBoundaryPatchesArray[patch]['owners_b']
+        """
         
         for iBPatch, theBCInfo in self.cfdBoundaryPatchesArray.items():
             
@@ -643,6 +668,11 @@ class Polymesh():
             self.cfdBoundaryPatchesArray[iBPatch]['owners_b']=[self.owners[i] for i in iBFaces]
 
     def cfdGetFaceSfSubArrayForBoundaryPatch(self):
+        """
+        Creates a list with the surface vectors (Sf) of each face belonging to each boundary patch in self.cfdBoundaryPatchesArray[patch]['facesSf']
+
+        """
+
         
         for iBPatch, theBCInfo in self.cfdBoundaryPatchesArray.items():
             

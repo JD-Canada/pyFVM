@@ -1,3 +1,4 @@
 *.pyc
 /docs/latex/*
 /pyFVM/__pycache__/*
+examples/hola.foam
