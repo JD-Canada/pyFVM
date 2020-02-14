@@ -213,8 +213,6 @@ class Polymesh():
         """ Reads the polyMesh/constant/neighbour file and returns a list 
         where the indexes are the faces and the corresponding element value is the neighbour cell
         """ 
-
-
         with open(self.neighbourFile,"r") as fpid:
             print('Reading neighbour file ...')
 
@@ -310,13 +308,16 @@ class Polymesh():
 
     def cfdProcessElementTopology(self):
 
+        """Populates self.elementNeighbours and self.elementFaces also populates self.upperAnbCoeffIndex self.lowerAnbCoeffIndex 
+
         """
-        """
-        
+        ## (list of lists) neighbour elements for each element in the domain
         self.elementNeighbours = [[] for i in range(0,self.numberOfElements)]
+
+        ## (list of lists) list of face indices forming each element
         self.elementFaces = [[] for i in range(0,self.numberOfElements)]
         
-    
+        #populates self.elementNeighbours and self.elementNeighbours
         for iFace in range(self.numberOfInteriorFaces):
             own=self.owners[iFace]
             nei=self.neighbours[iFace]
@@ -333,8 +334,8 @@ class Polymesh():
         for iFace in range(self.numberOfInteriorFaces,self.numberOfFaces):
             own=self.owners[iFace]
             self.elementFaces[own].append(iFace)
-            
         
+        ## List of lists containing points forming each element
         self.elementNodes = [[] for i in range(0,self.numberOfElements)]
         
         for iElement in range(self.numberOfElements):
@@ -342,13 +343,16 @@ class Polymesh():
             for faceIndex in self.elementFaces[iElement]:
                 self.elementNodes[iElement].append(self.faceNodes[faceIndex])
             
-            
             self.elementNodes[iElement] = list(set([item for sublist in self.elementNodes[iElement] for item in sublist]))
         
+        ## Upper coefficient indices (owners)
         self.upperAnbCoeffIndex=[[] for i in range(0,self.numberOfInteriorFaces)]
+    
+        ## Lower coefficient indices (owners)
         self.lowerAnbCoeffIndex=[[] for i in range(0,self.numberOfInteriorFaces)]
         
         for iElement in range(self.numberOfElements):
+            ## Element number from 1 to numberOfElements + 1
             iNb=1
             for faceIndex in self.elementFaces[iElement]:
                 
@@ -399,11 +403,18 @@ class Polymesh():
     #    self.faceSf']= [[] for i in range(self.numberOfFaces'])]
     #    self.faceAreas']= [[] for i in range(self.numberOfFaces'])]
         
+        ## Linear weight of distance from cell center to face
         self.faceWeights= [[0] for i in range(self.numberOfFaces)]
+
+        ##
         self.faceCF= [[0, 0, 0] for i in range(self.numberOfFaces)]
+        
         self.faceCf= [[0,0,0] for i in range(self.numberOfFaces)]
+        
         self.faceFf= [[0,0,0] for i in range(self.numberOfFaces)]
+        
         self.wallDist= [[] for i in range(self.numberOfFaces)]
+        
         self.wallDistLimited= [[] for i in range(self.numberOfFaces)]
         
         self.elementCentroids= [[] for i in range(self.numberOfElements)]
@@ -550,7 +561,6 @@ class Polymesh():
             
             local_centre = local_centre/len(theElementFaces)
             
-            
             localVolumeCentroidSum = [0,0,0]
             localVolumeSum = 0
             
@@ -587,8 +597,7 @@ class Polymesh():
             self.faceCf[iFace]=self.faceCentroids[iFace]-self.elementCentroids[own]
             self.faceFf[iFace]=self.faceCentroids[iFace]-self.elementCentroids[nei]
             self.faceWeights[iFace]=(-np.dot(self.faceFf[iFace],n))/(-np.dot(self.faceFf[iFace],n)+np.dot(self.faceCf[iFace],n))
-                
-            
+                 
         for iBFace in range(self.numberOfInteriorFaces, self.numberOfFaces):
             
             
