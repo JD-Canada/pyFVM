@@ -34,7 +34,6 @@ def cfdAssembleTransientTerm(self,theEquationName):
 def assembleFirstOrderEulerTransientTerm(self, theEquationName):
 
     """Populates fluxes 
-
     """
     volumes = np.asarray(self.mesh.elementVolumes).reshape(-1,1)   
     
@@ -44,7 +43,6 @@ def assembleFirstOrderEulerTransientTerm(self, theEquationName):
     
     rho = field.cfdGetSubArrayForInterior(self,'rho')
     rho_old = field.cfdGetPrevTimeStepSubArrayForInterior(self,'rho')
-    
     
     deltaT = self.dictionaries.controlDict['deltaT']
     

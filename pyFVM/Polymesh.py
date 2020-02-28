@@ -421,7 +421,7 @@ class Polymesh():
         ## Linear weight of distance from cell center to face
         self.faceWeights= [[0] for i in range(self.numberOfFaces)]
 
-        ##
+        ## Not
         self.faceCF= [[0, 0, 0] for i in range(self.numberOfFaces)]
         
         self.faceCf= [[0,0,0] for i in range(self.numberOfFaces)]
@@ -628,8 +628,7 @@ class Polymesh():
         
     def cfdGetBoundaryElementsSubArrayForBoundaryPatch(self):
         """
-        Creates a list of the boundary elements pertaining to a patch in self.cfdBoundaryPatchesArray for each patch
-
+        Creates a list of the boundary elements pertaining to a patch in self.cfdBoundaryPatchesArray
         """
 
         for iBPatch, theBCInfo in self.cfdBoundaryPatchesArray.items():
@@ -673,7 +672,6 @@ class Polymesh():
 
         """
 
-        
         for iBPatch, theBCInfo in self.cfdBoundaryPatchesArray.items():
             
             startBFace=self.cfdBoundaryPatchesArray[iBPatch]['startFaceIndex']
@@ -685,5 +683,3 @@ class Polymesh():
             self.cfdBoundaryPatchesArray[iBPatch]['facesSf']=[self.faceSf[i] for i in iBFaces]       
             
             self.cfdBoundaryPatchesArray[iBPatch]['facesSf']=np.asarray(self.cfdBoundaryPatchesArray[iBPatch]['facesSf'])
-
-
