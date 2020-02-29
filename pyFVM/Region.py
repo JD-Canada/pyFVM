@@ -134,6 +134,7 @@ class Region():
     
         """
         Calculates the geometric length scale of the mesh. 
+        Lenght scale = [sum(element volume)]^(1/3)
         """
     
         self.totalVolume = sum(self.mesh.elementVolumes)
