@@ -23,18 +23,18 @@ boundaryField
     inlet1
     {
         type            fixedValue;
-        value           uniform (2 2 0);
+        value           uniform (2 1 0);
     }
 
     inlet2
     {
         type            fixedValue;
-        value           uniform (2 2 0);
+        value           uniform (2 1 0);
     }
     outlet
     {
          type            fixedValue;
-        value           uniform (2 2 0);
+        value           uniform (2 1 0);
    }
 
     frontAndBack

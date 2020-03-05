@@ -137,6 +137,12 @@ class Field():
 
     def updateFieldForAllBoundaryPatches(self):
         
+        """Updates the field values of the faces on each of the boundary patches.
+        
+        
+        
+        """
+        
         for iBPatch, theBCInfo in self.Region.mesh.cfdBoundaryPatchesArray.items():
             
             self.iBPatch = iBPatch #for using in other functions
@@ -240,7 +246,7 @@ class Field():
         for count, index in enumerate(iBElements):
             self.phi[index]=newValues[count]
                 
-    
+            
     def updateSymmetry(self):
         
         #get indices for self.iBPatch's boundary faces in self.phi array

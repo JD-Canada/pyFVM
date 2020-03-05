@@ -46,12 +46,14 @@ class Gradient():
         self.owners_b=self.Region.mesh.owners_b
         self.Sf_b=self.Region.mesh.Sf_b
         
-        #phiGrad array to hold gradient values at interior and boundary centroids
-        #for scalars this array has shape (self.theNumberOfElements+self.theBoundaryArraySize,3,1)
-        #for vectors this array has shape (self.theNumberOfElements+self.theBoundaryArraySize,3,3)
+        ## phiGrad array to hold gradient values at interior and boundary centroids. For scalars this array has shape (self.theNumberOfElements+self.theBoundaryArraySize,3,1) for vectors this array has shape (self.theNumberOfElements+self.theBoundaryArraySize,3,3)
         self.phiGrad=np.zeros((self.theNumberOfElements+self.theBoundaryArraySize, 3,self.theNumberOfComponents))
 
     def cfdUpdateGradient(self):
+
+        """ Prints the boundary type and then assigns the calculated phiGrad field to self.Region.fluid[self.phiName].phiGrad
+
+        """
         
         for patch, patchInfo in self.boundaryPatches.items():
             thePhysicalType =patchInfo['type']
@@ -75,7 +77,7 @@ class Gradient():
         
         """ 
         This function computes the gradient for a field at the centroids of 
-        the 'Elements' using a first order gauss interpolation. No correction for 
+        the elements using a first order gauss interpolation. No correction for 
         non-conjuntionality is applied. 'phi' is the name of a field 
         used when the class is instantiated.
         
@@ -91,9 +93,7 @@ class Gradient():
             
             for iFace in range(self.iFaces):
                 
-                #this only updates phiGrad at the centroids of interior elements, 
-                #the contribution of boundary faces to boundary centroids is done
-                #directly below. 
+                #this only updates phiGrad at the centroids of interior elements, the contribution of boundary faces to boundary centroids is done directly below. 
                 
                 #accumlator of phi_f*Sf for the owner centroid of the face  
                 self.phiGrad[self.owners_f[iFace],:,iComponent]=self.phiGrad[self.owners_f[iFace],:,iComponent]+self.phi_f[iFace,iComponent]*self.Sf[iFace]
@@ -107,9 +107,22 @@ class Gradient():
             for iFace in range(self.Region.mesh.numberOfBFaces):
                 self.phiGrad[self.owners_b[iFace],:,iComponent]=self.phiGrad[self.owners_b[iFace],:,iComponent]+self.phi_b[iFace,iComponent]*self.Sf_b[iFace]
 
+        #calculate volume averaged gradient by dividing self.phiGrad by element volumes
+        self.volumes = self.Region.mesh.elementVolumes
+        for iComponent in range(self.theNumberOfComponents):
+            for iElement in range(self.Region.mesh.numberOfElements):
+                self.phiGrad[iElement,:,iComponent] = self.phiGrad[iElement,:,iComponent]/self.volumes[iElement]
+            
+        self.iBElements = np.arange(self.Region.mesh.numberOfElements, self.Region.mesh.numberOfElements+self.Region.mesh.numberOfBFaces, dtype=int)
+        
+        self.phiGrad[self.iBElements,:,:] = self.phiGrad[self.owners_b,:,:]
+
         self.cfdUpdateGradient()
 
     def updateWallGradients(self,patch):
+
+        """This function is written but has not been implemented yet in self.cfdUpdateGradient() above. The reason is because the test case we are using to check the code with does not have a wall boundary. I get it, I am lazy, but when we do have a wall boundary we will need to verify that this code is indeed working as intending by comparing its output to uFVM.
+        """
         
         owners_b=self.Region.mesh.cfdBoundaryPatchesArray[patch]['owners_b']
         faceCentroids_b=self.Region.mesh.cfdBoundaryPatchesArray[patch]['faceCentroids']
@@ -139,7 +152,6 @@ class Gradient():
         self.phiGrad[iBElements,:,:]=grad_b       
                 
    
-        
     def updateInletGradients(self,patch):
         
         owners_b=self.Region.mesh.cfdBoundaryPatchesArray[patch]['owners_b']
@@ -169,7 +181,6 @@ class Gradient():
 
         self.phiGrad[iBElements,:,:]=grad_b       
                 
-
     def updateOutletGradients(self,patch):
         
         owners_b=self.Region.mesh.cfdBoundaryPatchesArray[patch]['owners_b']
@@ -185,7 +196,6 @@ class Gradient():
         
         grad_b=np.zeros((numberOfBFaces, 3,self.theNumberOfComponents))        
         
-
         for iComponent in range(self.theNumberOfComponents):
             for iBFace in range(numberOfBFaces):
                 iBElement = startBElement+iBFace

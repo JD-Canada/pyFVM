@@ -14,7 +14,7 @@ class Equation():
         self.name=fieldName
         
         self.initializeResiduals()
-        
+                
         
     def initializeResiduals(self):
         

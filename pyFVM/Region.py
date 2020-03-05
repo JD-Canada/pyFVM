@@ -89,22 +89,22 @@ class Region():
         self.phiGradLinear=grad.Gradient(self,'phi')
         self.phiGradLinear.cfdComputeGradientGaussLinear0()
 
-        self.UGradLinear=grad.Gradient(self,'U')
-        self.UGradLinear.cfdComputeGradientGaussLinear0()
+       self.UGradLinear=grad.Gradient(self,'U')
+       self.UGradLinear.cfdComputeGradientGaussLinear0()
         
         #There is something wrong with cfdUpdateScale it is not giving the same numbers as uFVM
-        self.fluid['phi'].cfdUpdateScale()
+       self.fluid['phi'].cfdUpdateScale()
+#        
+       time.cfdInitTime(self)
+#        
+       io.cfdInitDirectories(self) 
+#
+#        ########################
+#        # Starting the time Loop
+#        
+       totalNumberOfIterations = 0
         
-        time.cfdInitTime(self)
-        
-        io.cfdInitDirectories(self) 
-
-        ########################
-        # Starting the time Loop
-        
-        totalNumberOfIterations = 0
-        
-        # while (cfdDoTransientoLoop):
+        while (cfdDoTransientoLoop):
         """
         while( totalNumberOfIterations < 3):
             # Update time
@@ -134,7 +134,7 @@ class Region():
     
         """
         Calculates the geometric length scale of the mesh. 
-        Lenght scale = [sum(element volume)]^(1/3)
+        Length scale = [sum(element volume)]^(1/3)
         """
     
         self.totalVolume = sum(self.mesh.elementVolumes)
@@ -151,6 +151,5 @@ class Region():
         #calculate mass flux through faces
         self.fluid['mdot_f'].phi=rho_f*(Sf*U_f).sum(1)
         
-
 
         
