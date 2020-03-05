@@ -51,8 +51,7 @@ def cfdPreAssembleEquation(theEquationName):
     pass
 
 def cfdAssembleEquationTerms(self, theEquationName): # This function assembles equation terms"
-    pass
-
+    
     # get the scalar
     theEquation = cfdGetModel(self,theEquationName)        
     
@@ -63,7 +62,8 @@ def cfdAssembleEquationTerms(self, theEquationName): # This function assembles e
         if iTerm == 'Transient':
             scalar.cfdZeroElementFLUXCoefficients(self)
             assemble.cfdAssembleTransientTerm(self,theEquationName)
-        
+            assemble.AssembleIntoGlobalMatrixElementFluxes(self)
+            
         elif iTerm == 'Convection':
             print('It is convection')
 

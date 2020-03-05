@@ -683,3 +683,7 @@ class Polymesh():
             self.cfdBoundaryPatchesArray[iBPatch]['facesSf']=[self.faceSf[i] for i in iBFaces]       
             
             self.cfdBoundaryPatchesArray[iBPatch]['facesSf']=np.asarray(self.cfdBoundaryPatchesArray[iBPatch]['facesSf'])
+
+
+            
+
