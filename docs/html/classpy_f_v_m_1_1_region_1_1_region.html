@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>pyFVm: pyFVM.Region.Region Class Reference</title>
+<title>My Project: pyFVM.Region.Region Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,10 +21,8 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">pyFVm
-   &#160;<span id="projectnumber">0</span>
+   <div id="projectname">My Project
    </div>
-   <div id="projectbrief">CFD solver that doesnt work</div>
   </td>
  </tr>
  </tbody>
@@ -135,7 +133,9 @@ The instance is created at the beginning of each case and is used to hold
 other class instances, such as 'polyMesh', any number of 'fluid' instances
 and a number of other attributes required for the simulation to run.
 
-All information related to the mesh's topology (i.e., distances of cell centers to wall, face surface areas, face normals and cell volumes) is available in the Region class. </pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+All information related to the mesh's topology (i.e., distances of cell centers to wall, face surface areas, face normals and cell volumes) is available in the Region class. </pre> 
+<p class="definition">Definition at line <a class="el" href="_region_8py_source.html#l00017">17</a> of file <a class="el" href="_region_8py_source.html">Region.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac630b03db4f4502a63f6581f9430d733"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac630b03db4f4502a63f6581f9430d733">&#9670;&nbsp;</a></span>__init__()</h2>
 
@@ -166,6 +166,8 @@ and adds the 'dictionaries' and 'fluid' dictionaries. Reminder -
 __init__ functions are run automatically when a new class instance is 
 created. 
 </pre> 
+<p class="definition">Definition at line <a class="el" href="_region_8py_source.html#l00030">30</a> of file <a class="el" href="_region_8py_source.html">Region.py</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -186,6 +188,8 @@ created.
 </div><div class="memdoc">
 <pre class="fragment">Calculates the geometric length scale of the mesh. 
 </pre> 
+<p class="definition">Definition at line <a class="el" href="_region_8py_source.html#l00133">133</a> of file <a class="el" href="_region_8py_source.html">Region.py</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -202,6 +206,8 @@ created.
 </div><div class="memdoc">
 
 <p>Instance of Coefficients class which contains information related to how the connectivity of the mesh. </p>
+
+<p class="definition">Definition at line <a class="el" href="_region_8py_source.html#l00084">84</a> of file <a class="el" href="_region_8py_source.html">Region.py</a>.</p>
 
 </div>
 </div>
@@ -220,6 +226,8 @@ created.
 <p>Dictionary holding information contained within the various c++ dictionaries used in OpenFOAM. </p>
 <p>For example, the contents of the './system/controlDict' file can be retrieved by calling Region.dictionaries.controlDict which return the dictionary containing all the entries in controlDict. </p>
 
+<p class="definition">Definition at line <a class="el" href="_region_8py_source.html#l00053">53</a> of file <a class="el" href="_region_8py_source.html">Region.py</a>.</p>
+
 </div>
 </div>
 <a id="a18bfc9b2d9c9bd6403db21b5b458a7ac"></a>
@@ -237,6 +245,8 @@ created.
 <p>Dictionary to hold 'fluid' properties. </p>
 <p>We are considering changing this to a more meaningful name such as 'field' because often this dictionary is used to store field and field variables which are not necessarily fluids. </p>
 
+<p class="definition">Definition at line <a class="el" href="_region_8py_source.html#l00047">47</a> of file <a class="el" href="_region_8py_source.html">Region.py</a>.</p>
+
 </div>
 </div>
 <a id="a2a569d069162a54de1c13f2ba72ce2df"></a>
@@ -253,10 +263,12 @@ created.
 
 <p>Dictionary containing all the information related to the FVM mesh. </p>
 
+<p class="definition">Definition at line <a class="el" href="_region_8py_source.html#l00056">56</a> of file <a class="el" href="_region_8py_source.html">Region.py</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>Region.py</li>
+<li><a class="el" href="_region_8py_source.html">Region.py</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

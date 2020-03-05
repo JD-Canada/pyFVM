@@ -216,7 +216,7 @@ class Polymesh():
         with open(self.neighbourFile,"r") as fpid:
             print('Reading neighbour file ...')
 
-            ## (list) 1D, indices refer to faces, list value is the face's owner cell
+            ## (list) 1D, indices refer to faces, list value is the face's neighbour cell
             self.neighbours=[]
             start=False
             
@@ -316,13 +316,13 @@ class Polymesh():
         """Populates self.elementNeighbours and self.elementFaces also populates self.upperAnbCoeffIndex self.lowerAnbCoeffIndex 
 
         """
-        ## (list of lists) neighbour elements for each element in the domain
+        ## (list of lists) List where each index represents an element in the domain. Each index has an associated list which contains the elements for which is shares a face (i.e. the neighouring elements). Do not confuse a faces 'neighbour cell', which refers to a face's neighbour element, with the neighbouring elements of a cell. 
         self.elementNeighbours = [[] for i in range(0,self.numberOfElements)]
 
         ## (list of lists) list of face indices forming each element
         self.elementFaces = [[] for i in range(0,self.numberOfElements)]
         
-        #populates self.elementNeighbours and self.elementNeighbours
+        #populates self.elementNeighbours
         for iFace in range(self.numberOfInteriorFaces):
             own=self.owners[iFace]
             nei=self.neighbours[iFace]

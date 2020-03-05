@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['facenodes',['faceNodes',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a07c17346dbb9fa996390797f01702da0',1,'pyFVM::Polymesh::Polymesh']]],
-  ['facesfile',['facesFile',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a7eb9fb1f790637364d02fb36f2d137ec',1,'pyFVM::Polymesh::Polymesh']]],
-  ['fluid',['fluid',['../classpy_f_v_m_1_1_region_1_1_region.html#a18bfc9b2d9c9bd6403db21b5b458a7ac',1,'pyFVM::Region::Region']]],
-  ['fluxes',['fluxes',['../classpy_f_v_m_1_1_region_1_1_region.html#a470eb7f9bb289ea6bec0123ef9e445c7',1,'pyFVM::Region::Region']]],
-  ['fvschemes',['fvSchemes',['../classpy_f_v_m_1_1_foam_dictionaries_1_1_foam_dictionaries.html#acc8665199addb6c6c34bab84b759ad9d',1,'pyFVM::FoamDictionaries::FoamDictionaries']]]
+  ['elementfaces',['elementFaces',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#aa3365bedf8827d3383e7e678b297870c',1,'pyFVM::Polymesh::Polymesh']]],
+  ['elementneighbours',['elementNeighbours',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a22b586fb3ff9f5a6c957ed39734c87da',1,'pyFVM::Polymesh::Polymesh']]],
+  ['elementnodes',['elementNodes',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a5129746d36aba9b5043d17d2b353cdf7',1,'pyFVM::Polymesh::Polymesh']]]
 ];

@@ -5,6 +5,38 @@ import pyFVM.Field as field
 This file contains functions to assemble the transient term
 """
 
+
+#def cfdAssembleConvectionTerm(self,theEquationName):
+        
+def cfdAssemebleConvectionTermIntoInterior(self,theEquationName):
+    
+    nmbrIntF=self.mesh.numberOfinteriorFaces
+    self.field[theEquationName].cfdGetSubArrayForInterior()
+    phi=self.field[theEquationName].phiInteriorSubArray
+    
+    self.field['mdot_f'].cfdGetSubArrayForInterior()
+    mdot_f=self.field['mdot_f'].phiInteriorSubArray
+    
+    local_FluxCf=max(mdot_f,0)
+    local_FluxFf=-max(-mdot_f,0)
+    
+    local_FluxVf=np.zeros(len(local_FluxCf))
+    
+    self.region.fluxes['FluxCf'][0:nmbrIntF]=local_FluxCf
+    self.region.fluxes['FluxFf'][0:nmbrIntF]=local_FluxFf
+    self.region.fluxes['FluxVf'][0:nmbrIntF]=local_FluxVf
+#    self.region.fluxes['FluxTf'][0:nmbrIntF]=np.multiply(local_FluxCf, 
+    
+    
+def cfdAssembleIntoGlobalMatrixElementFluxes(self):
+    
+    self.coefficients.ac=self.coefficients.ac+self.fluxes.FluxC
+    self.coefficients.ac_old=self.coefficients.ac_old+self.fluxes.FluxC_old
+    self.coefficients.bc=self.coefficients.bc-self.fluxes.FluxT
+
+
+    
+
 def cfdAssembleTransientTerm(self,theEquationName):
 
     """Chooses time-stepping approach

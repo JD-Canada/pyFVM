@@ -75,7 +75,7 @@ class Gradient():
         
         """ 
         This function computes the gradient for a field at the centroids of 
-        the 'Elements' using a first order gauss interpolation no correction for 
+        the 'Elements' using a first order gauss interpolation. No correction for 
         non-conjuntionality is applied. 'phi' is the name of a field 
         used when the class is instantiated.
         

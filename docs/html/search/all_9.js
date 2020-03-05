@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['neighbourfile',['neighbourFile',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a6d32e1d66244449b0ab0bab0ada6a144',1,'pyFVM::Polymesh::Polymesh']]],
-  ['neighbours',['neighbours',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a11ca55c227e0625b04e76e82923e5269',1,'pyFVM::Polymesh::Polymesh']]],
-  ['nodecentroids',['nodeCentroids',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#ad93e3df367cb77037ff2ddb6f5331c07',1,'pyFVM::Polymesh::Polymesh']]]
+  ['maxpoints',['maxPoints',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#afebf2be139681c451afde30c50beba9d',1,'pyFVM::Polymesh::Polymesh']]],
+  ['mesh',['mesh',['../classpy_f_v_m_1_1_region_1_1_region.html#a2a569d069162a54de1c13f2ba72ce2df',1,'pyFVM::Region::Region']]],
+  ['model',['model',['../classpy_f_v_m_1_1_region_1_1_region.html#a1e511f8c07f166d8ef7ca5a28a9f8a9b',1,'pyFVM::Region::Region']]]
 ];

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['ownerfile',['ownerFile',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a75d43fc48a8adba52e13adf69009f6e8',1,'pyFVM::Polymesh::Polymesh']]],
-  ['owners',['owners',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a7b0cb04657183194e83665bcd323539a',1,'pyFVM::Polymesh::Polymesh']]],
-  ['owners_5fb',['owners_b',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#a9c69a2bd55418fa501b0c7c2b3fb34a8',1,'pyFVM::Polymesh::Polymesh']]]
+  ['maxpoints',['maxPoints',['../classpy_f_v_m_1_1_polymesh_1_1_polymesh.html#afebf2be139681c451afde30c50beba9d',1,'pyFVM::Polymesh::Polymesh']]],
+  ['mesh',['mesh',['../classpy_f_v_m_1_1_region_1_1_region.html#a2a569d069162a54de1c13f2ba72ce2df',1,'pyFVM::Region::Region']]],
+  ['model',['model',['../classpy_f_v_m_1_1_region_1_1_region.html#a1e511f8c07f166d8ef7ca5a28a9f8a9b',1,'pyFVM::Region::Region']]]
 ];

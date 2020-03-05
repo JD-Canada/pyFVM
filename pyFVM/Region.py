@@ -80,7 +80,7 @@ class Region():
         
         io.cfdPrintHeader()
         
-        ## Instance of Coefficients class which contains information related to how the connectivity of the mesh.
+        ## Instance of Coefficients class which contains information related to the connectivity of the mesh.
         self.coefficients=coefficients.Coefficients(self)
 
         ## Instance of Fluxes class which contains flux information  

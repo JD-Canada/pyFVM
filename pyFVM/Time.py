@@ -7,17 +7,9 @@ import numpy as np
 
 
 
-
-
-
-#class FoamTimes():
-    
-#    def __init__(self, Region):
-#        self.Region=Region
-#        self.cfdInitTime(Region)
-        
-        
 def cfdInitTime(self):
+    
+    ## current time of simulation. Its value changes depending on how the simulation is initialized. 
     self.time={}
 
     if self.dictionaries.controlDict['startFrom']=='startTime':
@@ -30,7 +22,6 @@ def cfdInitTime(self):
             self.time['currentTime'] = float(min(self.timeSteps))
 
     print('Start time: %.2f' % self.time['currentTime'])
-
 
 def cfdUpdateRunTime(self):
     self.time['currentTime'] = self.time['currentTime'] + self.dictionaries.controlDict['deltaT']
