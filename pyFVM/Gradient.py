@@ -90,7 +90,6 @@ class Gradient():
             #vectorized linear interpolation (same as Interpolate.interpolateFromElementsToFaces('linear'))
             self.phi_f[0:self.iFaces,iComponent]=self.g_f*self.phi[self.neighbours_f][:,iComponent]+(self.ones-self.g_f)*self.phi[self.owners_f][:,iComponent]
             
-            
             for iFace in range(self.iFaces):
                 
                 #this only updates phiGrad at the centroids of interior elements, the contribution of boundary faces to boundary centroids is done directly below. 

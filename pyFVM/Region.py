@@ -89,33 +89,33 @@ class Region():
         self.phiGradLinear=grad.Gradient(self,'phi')
         self.phiGradLinear.cfdComputeGradientGaussLinear0()
 
-       self.UGradLinear=grad.Gradient(self,'U')
-       self.UGradLinear.cfdComputeGradientGaussLinear0()
+        self.UGradLinear=grad.Gradient(self,'U')
+        self.UGradLinear.cfdComputeGradientGaussLinear0()
         
         #There is something wrong with cfdUpdateScale it is not giving the same numbers as uFVM
-       self.fluid['phi'].cfdUpdateScale()
+        self.fluid['phi'].cfdUpdateScale()
 #        
-       time.cfdInitTime(self)
+        time.cfdInitTime(self)
 #        
-       io.cfdInitDirectories(self) 
+        io.cfdInitDirectories(self) 
 #
 #        ########################
 #        # Starting the time Loop
 #        
-       totalNumberOfIterations = 0
+        totalNumberOfIterations = 0
         
-        while (cfdDoTransientoLoop):
+        #while (cfdDoTransientoLoop):
         """
         while( totalNumberOfIterations < 3):
             # Update time
             time.cfdUpdateRunTime(self)
-    
+        
             # Copy current field into previos TIME field        
             self.prevTimeStep = self.fluid
-    
+        
             # Print current simul time
             time.cfdPrintCurrentTime(self)
-    
+        
             # Inner loop
             for nIter in range(40):
                 totalNumberOfIterations += 1

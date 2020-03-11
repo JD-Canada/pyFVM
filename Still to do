@@ -1,0 +1,67 @@
+Functions to do still in pyFVM:
+cfdAssembleAndCorrectScalarEquation
+	-cfdAssembleEquation
+		-cfdPreAssembleEquation (EMPTY)
+			
+		-cfdAssembleEquationTerms
+			-cfdZeroElementFLUXCoefficients (5 lines, easy)
+			
+			-cfdAssembleTransientTerm
+				-assembleFirstOrderEulerTransientTerm (20 lines, easy)
+				
+			-cfdAssembleIntoGlobalMatrixElementFluxes (10 lines, easy)
+			
+			-cfdAssembleConvectionTerm (mostly the subfunctions)
+				-cfdAssembleConvectionTermInterior (10 lines, easy)
+				-cfdAssembleConvectionTermZeroGradient (10 lines, easy)
+				-cfdAssembleConvectionTermSpecifiedValue (10 lines, easy)
+				
+			-cfdAssembleDCSchemeTerm
+				-processDCSOUScheme (15 lines, easy) 
+					-cfdInterpolateGradientsFromElementsToInteriorFaces (50 lines, medium)
+			-cfdAssembleIntoGlobalMatrixFaceFluxes (30 lines, easy)
+			
+			-cfdAssembleDivergenceCorrectionTerm (10 lines, easy)
+				-cfdComputeEffectiveDivergence (20 lines, medium)
+				
+			
+			-cfdAssembleDiffusionTerm (mostly logic and subfunctions in file)
+				-cfdAssembleDiffusionTermInterior (20 lines, medium)
+				-cfdAssembleDiffusionTermSpecifiedValue (20 lines, easy)
+				
+				
+			-cfdAssembleFalseTransientTerm (10 lines, easy)
+
+
+		-cfdPostAssembleScalarEquation
+			-cfdAssembleImplicitRelaxation (easy)
+			-cfdComputeScaledRMSResiduals (30-40 lines, medium)
+			
+		
+		
+	-cfdSolveScalarEquation
+		-cfdSolveEquation
+			-cfdApplyAMG
+				-cfdAgglomerate
+					-cfdAgglomerateLevel (90 lines, hard)
+					-cfdAssembleAgglomeratedLHS (10 lines, easy)
+				-cfdComputeResidualArray (10 lines, easy)
+				
+				-cfdApplyVCycle 
+					-cfdSolveAlgebraicSystem
+						-cfdFactorizeILU (30 lines, medium)
+						-cfdSolveILU (40 lines, medium)
+						-cfdSolveSOR (20 lines, medium)
+					-cfdRestrict (quick)
+						-cfdUpdateRHS (quick)
+					-cfdProlongate (quick)
+						-cfdCorrectFinerLevelSolution (quick)
+			
+		-cfdCorrectScalarEquation (80 lines, but easy)
+		
+	-cfdZeroCoefficients (quick and easy)
+
+cfdPlotEquationRes (easy)
+cfdPostEquationResults
+cfdWriteResults (lengthy but should be easy)
+	
