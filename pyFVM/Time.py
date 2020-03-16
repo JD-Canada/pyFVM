@@ -1,31 +1,66 @@
-import os
-import pyFVM.IO as io
-import pyFVM.Field as field
-import pyFVM.Math as mth
-import pyFVM.FoamDictionaries as fd
-import numpy as np
+import time as timer
 
 
 
-def cfdInitTime(self):
+class Time():
     
-    ## current time of simulation. Its value changes depending on how the simulation is initialized. 
-    self.time={}
+    """Manages simulation's time related properties
+    """
+    
+    def __init__(self,Region):
+        
+        ##Time at beginning of transient loop
+        self.tic=timer.time()
 
-    if self.dictionaries.controlDict['startFrom']=='startTime':
-            self.time['currentTime'] = float(self.dictionaries.controlDict['startTime'])
+        ##Instance of simulation's region class
+        self.region=Region
+        
+        if self.region.dictionaries.controlDict['startFrom']=='startTime':
+            
+                ##Specified start time of the simulation
+                self.startTime=float(self.region.dictionaries.controlDict['startTime'])
+                
+                ## The current time elapsed since the start of the simulation
+                self.currentTime = self.startTime
+    
+        elif self.region.dictionaries.controlDict['startFrom']=='latestTime':
+                self.currentTime = float(max(self.region.timeSteps))
+    
+        elif self.region.dictionaries.controlDict['startFrom']=='firstTime':
+                self.currentTime = float(min(self.region.timeSteps))
+    
+        print('Start time: %.2f' % self.currentTime)
+        
+        ##Specified end time of the simulation
+        self.endTime= float(self.region.dictionaries.controlDict['endTime'])
+    
+    def cfdUpdateRunTime(self):
+        
+        """Increments the simulation's runTime, updates cpu time
+        """
+        
+        self.currentTime = self.currentTime + self.region.dictionaries.controlDict['deltaT']
+        
+        ## The elapsed cpu clock time since starting the transient loop
+        self.cpuTime=timer.time()-self.tic
+        
+        print('cpu time: %0.4f [s]\n' % self.cpuTime)
+        
+    
+    def cfdPrintCurrentTime(self):
+        
+        """Prints the current runTime"""
+        
+        print('\n\n Time: %0.4f [s]\n' % self.currentTime)
+        
+    def cfdDoTransientLoop(self):
+        
+        """
+        Checks too see if simulation runTime has reached the simulation's end time
+        """
 
-    elif self.dictionaries.controlDict['startFrom']=='latestTime':
-            self.time['currentTime'] = float(max(self.timeSteps))
-
-    elif self.dictionaries.controlDict['startFrom']=='firstTime':
-            self.time['currentTime'] = float(min(self.timeSteps))
-
-    print('Start time: %.2f' % self.time['currentTime'])
-
-def cfdUpdateRunTime(self):
-    self.time['currentTime'] = self.time['currentTime'] + self.dictionaries.controlDict['deltaT']
-    # There should be a physical time registry here, I can't see where it does start in Matlab
-
-def cfdPrintCurrentTime(self):
-    print('\n\n Time: %0.4f [s]\n' % self.time['currentTime'])
+        if self.currentTime < self.endTime:
+            return True
+        else:
+            return False
+        

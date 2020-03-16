@@ -76,10 +76,6 @@ class Field():
         self.phiGrad=[]
         
         
-
-        
-        
-        
     def cfdUpdateScale(self):
     
         """Update the min, max and scale values of a field in Region
@@ -95,7 +91,6 @@ class Field():
 
         theMagnitude = mth.cfdMag(self.phi)
         
-   
         try:
             
             #see if it is a vector
@@ -134,12 +129,14 @@ class Field():
         
         self.dimensions=dimensions
 
+    def setPreviousTimeStep(self):
+        
+        self.prevTimeStep=self.phi
+
 
     def updateFieldForAllBoundaryPatches(self):
         
         """Updates the field values of the faces on each of the boundary patches.
-        
-        
         
         """
         

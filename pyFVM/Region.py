@@ -10,7 +10,7 @@ import pyFVM.Interpolate as interpolate
 import pyFVM.Coefficients as coefficients
 import pyFVM.Fluxes as fluxes
 import pyFVM.Gradient as grad
-import pyFVM.Time as time
+import pyFVM.Time as Time
 
 
 
@@ -94,41 +94,40 @@ class Region():
         
         #There is something wrong with cfdUpdateScale it is not giving the same numbers as uFVM
         self.fluid['phi'].cfdUpdateScale()
-#        
-        time.cfdInitTime(self)
-#        
+
+        self.time = Time.Time(self)
+     
         io.cfdInitDirectories(self) 
-#
-#        ########################
-#        # Starting the time Loop
-#        
+
         totalNumberOfIterations = 0
         
-        #while (cfdDoTransientoLoop):
-        """
-        while( totalNumberOfIterations < 3):
-            # Update time
-            time.cfdUpdateRunTime(self)
-        
-            # Copy current field into previos TIME field        
-            self.prevTimeStep = self.fluid
-        
-            # Print current simul time
-            time.cfdPrintCurrentTime(self)
-        
-            # Inner loop
-            for nIter in range(40):
+        while(self.time.cfdDoTransientLoop()):
+            
+            #manage time
+            self.time.cfdPrintCurrentTime()
+            self.time.cfdUpdateRunTime()
+      
+            # Copy current field into previous TIME field        
+            self.thePhiField = self.fluid['phi']
+            self.thePhiField.setPreviousTimeStep()
+
+            #sub-loop
+            for nIter in range(10):
+                
                 totalNumberOfIterations += 1
         
-                # print Headers
                 io.cfdPrintInteration(totalNumberOfIterations)        
                 io.cfdPrintResidualsHeader()
                 
-                ## Previous iteration of self.fluid
-                self.prevIter = self.fluid
-        """
+                #Previous iteration of self.fluid
+                self.thePhiField.setPreviousTimeStep()
+                
+                """
+                To-do: Work through cfdAssembleAndCorrectScalarEquation()
+                """
+   
 
-        ###########################
+     
 
     def cfdGeometricLengthScale(self):
     

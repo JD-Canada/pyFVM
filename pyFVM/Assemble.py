@@ -1,9 +1,91 @@
 import numpy as np
 import pyFVM.Field as field
 
-"""
-This file contains functions to assemble the transient term
-"""
+
+
+def cfdZeroElementFLUXCoefficients(self):
+    """
+    Sets the coefficient arrays equal to zero
+    """
+
+    self.fluxes['FluxC'].fill(0)
+    self.fluxes['FluxV'].fill(0)
+    self.fluxes['FluxT'].fill(0)
+    self.fluxes['FluxC_old'].fill(0)
+
+def cfdAssembleEquationTerms(self,theEquationName):
+
+    for iTerm in self.model[theEquationName]:
+
+        if iTerm == 'Transient':
+            cfdZeroElementFLUXCoefficients()
+            cfdAssembleTransientTerm()
+            cfdAssembleIntoGlobalMatrixElemenFluxes()
+
+        elif iTerm == 'Convection':
+            cfdZeroFaceFLUXCoefficients()
+            cfdAssembleConvectionTerm()
+            cfdAssembleDCSchemeTerm()
+            cfdAssembleIntoGlobalMatrixFaceFluxes()
+            
+            cfdZeroElementFLUXCoefficients()
+            cfdAssembleDivergenceCorrectionTerm()
+            cfdAssembleIntoGlobalMatrixElementFluxes()
+
+        elif iTerm == 'Diffusion':
+            cfdZeroFaceFLUXCoefficients()
+            cfdAssembleDiffusionTerm() 
+            cfdAssembleIntoGlobalMatrixFaceFluxes()
+
+        elif iTerm == 'FalseTransient':
+            cfdZeroElementFLUXCoefficients()
+            cfdAssembleFalseTransientTerm()
+            cfdAssembleIntoGlobalMatrixElementFluxes()
+        else:
+            print('The term %s is not defined' %(iTerm))
+
+
+
+#function cfdAssembleEquationTerms(theEquationName)
+#
+#% get theScalarName
+#theEquation = cfdGetModel(theEquationName);
+#
+#% check if equation is to be assembled
+#theNumberOfTerms = length(theEquation.terms);
+#
+#% Assemble Coefficients
+#for iTerm = 1:theNumberOfTerms
+#    theTermName = theEquation.terms{iTerm};
+#    if strcmp(theTermName,'Transient')
+#        cfdZeroElementFLUXCoefficients;
+#        cfdAssembleTransientTerm(theEquationName);
+#        cfdAssembleIntoGlobalMatrixElementFluxes;
+#    elseif strcmp(theTermName, 'Convection')
+#        cfdZeroFaceFLUXCoefficients;
+#        cfdAssembleConvectionTerm(theEquationName);
+#        cfdAssembleDCSchemeTerm(theEquationName);
+#        cfdAssembleIntoGlobalMatrixFaceFluxes;
+#        
+#        cfdZeroElementFLUXCoefficients;
+#        cfdAssembleDivergenceCorrectionTerm(theEquationName);
+#        cfdAssembleIntoGlobalMatrixElementFluxes;
+#    elseif strcmp(theTermName, 'Diffusion')
+#        cfdZeroFaceFLUXCoefficients;
+#        cfdAssembleDiffusionTerm(theEquationName); 
+#        cfdAssembleIntoGlobalMatrixFaceFluxes;
+#    elseif strcmp(theTermName,'FalseTransient')
+#        cfdZeroElementFLUXCoefficients;
+#        cfdAssembleFalseTransientTerm(theEquationName);
+#        cfdAssembleIntoGlobalMatrixElementFluxes;        
+#    else
+#        error('\n%s\n',[theTermName,' term is not defined']);
+#    end
+#end
+
+
+
+
 
 
 #def cfdAssembleConvectionTerm(self,theEquationName):
