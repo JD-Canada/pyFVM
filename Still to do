@@ -1,15 +1,15 @@
-Functions to do still in pyFVM:
+Functions to still do in pyFVM:
 cfdAssembleAndCorrectScalarEquation
 	-cfdAssembleEquation
 		-cfdPreAssembleEquation (EMPTY)
 			
 		-cfdAssembleEquationTerms
-			-cfdZeroElementFLUXCoefficients (5 lines, easy)
+			-cfdZeroElementFLUXCoefficients (DONE)
 			
 			-cfdAssembleTransientTerm
-				-assembleFirstOrderEulerTransientTerm (20 lines, easy)
+				-assembleFirstOrderEulerTransientTerm (DONE)
 				
-			-cfdAssembleIntoGlobalMatrixElementFluxes (10 lines, easy)
+			-cfdAssembleIntoGlobalMatrixElementFluxes (DONE)
 			
 			-cfdAssembleConvectionTerm (mostly the subfunctions)
 				-cfdAssembleConvectionTermInterior (10 lines, easy)

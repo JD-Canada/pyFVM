@@ -1,178 +1,182 @@
 import numpy as np
 import pyFVM.Field as field
 
-
-
-def cfdZeroElementFLUXCoefficients(self):
-    """
-    Sets the coefficient arrays equal to zero
+class Assemble:
+    """Logic and functions necessary to assemble an equation 
     """
 
-    self.fluxes['FluxC'].fill(0)
-    self.fluxes['FluxV'].fill(0)
-    self.fluxes['FluxT'].fill(0)
-    self.fluxes['FluxC_old'].fill(0)
+    def __init__(self,Region,theEquationName):
+        """ Initiates the Assemble class instance
+        """
 
-def cfdAssembleEquationTerms(self,theEquationName):
+        ## Instance of the case's region class
+        self.region=Region
 
-    for iTerm in self.model[theEquationName]:
+        ## Name of the equation stored in region.model dictionary
+        self.theEquationName=theEquationName
 
-        if iTerm == 'Transient':
-            cfdZeroElementFLUXCoefficients()
-            cfdAssembleTransientTerm()
-            cfdAssembleIntoGlobalMatrixElemenFluxes()
-
-        elif iTerm == 'Convection':
-            cfdZeroFaceFLUXCoefficients()
-            cfdAssembleConvectionTerm()
-            cfdAssembleDCSchemeTerm()
-            cfdAssembleIntoGlobalMatrixFaceFluxes()
-            
-            cfdZeroElementFLUXCoefficients()
-            cfdAssembleDivergenceCorrectionTerm()
-            cfdAssembleIntoGlobalMatrixElementFluxes()
-
-        elif iTerm == 'Diffusion':
-            cfdZeroFaceFLUXCoefficients()
-            cfdAssembleDiffusionTerm() 
-            cfdAssembleIntoGlobalMatrixFaceFluxes()
-
-        elif iTerm == 'FalseTransient':
-            cfdZeroElementFLUXCoefficients()
-            cfdAssembleFalseTransientTerm()
-            cfdAssembleIntoGlobalMatrixElementFluxes()
-        else:
-            print('The term %s is not defined' %(iTerm))
-
-
-
-#function cfdAssembleEquationTerms(theEquationName)
-#
-#% get theScalarName
-#theEquation = cfdGetModel(theEquationName);
-#
-#% check if equation is to be assembled
-#theNumberOfTerms = length(theEquation.terms);
-#
-#% Assemble Coefficients
-#for iTerm = 1:theNumberOfTerms
-#    theTermName = theEquation.terms{iTerm};
-#    if strcmp(theTermName,'Transient')
-#        cfdZeroElementFLUXCoefficients;
-#        cfdAssembleTransientTerm(theEquationName);
-#        cfdAssembleIntoGlobalMatrixElementFluxes;
-#    elseif strcmp(theTermName, 'Convection')
-#        cfdZeroFaceFLUXCoefficients;
-#        cfdAssembleConvectionTerm(theEquationName);
-#        cfdAssembleDCSchemeTerm(theEquationName);
-#        cfdAssembleIntoGlobalMatrixFaceFluxes;
-#        
-#        cfdZeroElementFLUXCoefficients;
-#        cfdAssembleDivergenceCorrectionTerm(theEquationName);
-#        cfdAssembleIntoGlobalMatrixElementFluxes;
-#    elseif strcmp(theTermName, 'Diffusion')
-#        cfdZeroFaceFLUXCoefficients;
-#        cfdAssembleDiffusionTerm(theEquationName); 
-#        cfdAssembleIntoGlobalMatrixFaceFluxes;
-#    elseif strcmp(theTermName,'FalseTransient')
-#        cfdZeroElementFLUXCoefficients;
-#        cfdAssembleFalseTransientTerm(theEquationName);
-#        cfdAssembleIntoGlobalMatrixElementFluxes;        
-#    else
-#        error('\n%s\n',[theTermName,' term is not defined']);
-#    end
-#end
-
-
-
-
-
-
-#def cfdAssembleConvectionTerm(self,theEquationName):
+        ## The instance of Equation stored in the self.region.model dictionary
+        self.theEquation=self.region.model[self.theEquationName]
         
-def cfdAssemebleConvectionTermIntoInterior(self,theEquationName):
-    
-    nmbrIntF=self.mesh.numberOfinteriorFaces
-    self.field[theEquationName].cfdGetSubArrayForInterior()
-    phi=self.field[theEquationName].phiInteriorSubArray
-    
-    self.field['mdot_f'].cfdGetSubArrayForInterior()
-    mdot_f=self.field['mdot_f'].phiInteriorSubArray
-    
-    local_FluxCf=max(mdot_f,0)
-    local_FluxFf=-max(-mdot_f,0)
-    
-    local_FluxVf=np.zeros(len(local_FluxCf))
-    
-    self.region.fluxes['FluxCf'][0:nmbrIntF]=local_FluxCf
-    self.region.fluxes['FluxFf'][0:nmbrIntF]=local_FluxFf
-    self.region.fluxes['FluxVf'][0:nmbrIntF]=local_FluxVf
-#    self.region.fluxes['FluxTf'][0:nmbrIntF]=np.multiply(local_FluxCf, 
-    
-    
-def cfdAssembleIntoGlobalMatrixElementFluxes(self):
-    
-    self.coefficients.ac=self.coefficients.ac+self.fluxes.FluxC
-    self.coefficients.ac_old=self.coefficients.ac_old+self.fluxes.FluxC_old
-    self.coefficients.bc=self.coefficients.bc-self.fluxes.FluxT
+        self.cfdPreAssembleEquation()
+        self.cfdAssembleEquationTerms()
+        
 
-
-    
-
-def cfdAssembleTransientTerm(self,theEquationName):
-
-    """Chooses time-stepping approach
-
-    If ddtSchemes is 'steadyState' then pass, if 'Euler' then redirect
-    towards assembleFirstOrderEulerTransientTerm() or potentially others
-    later on.
-
-    Args:
-        self (class instance): Instance of Region class.
-        theEquationName (str): Equation (or field) name for which the transient terms will be assembled.
-
-    Returns:
-        none
-    """
-    
-    theScheme = self.dictionaries.fvSchemes['ddtSchemes']['default']
-    
-    if theScheme == 'steadyState':
+    def cfdPreAssembleEquation(self):
+        #empty in uFVM
         pass
-    elif theScheme == 'Euler':
-        assembleFirstOrderEulerTransientTerm(self, theEquationName)
-    else:
-        print('\n%s' % (theScheme+' ddtScheme is incorrect'))
+
+    def cfdAssembleEquationTerms(self): 
+        """
+        Assembles the equation's terms
+        """
         
+        print('Inside cfdAssembleEquationTerms')
+       
+        for iTerm in self.theEquation.terms:
+
+            if iTerm == 'Transient':
+                self.cfdZeroElementFLUXCoefficients()
+                self.cfdAssembleTransientTerm()
+#                self.cfdAssembleIntoGlobalMatrixElementFluxes()
+                
+            elif iTerm == 'Convection':
+                print('It is convection')
+
+            elif iTerm == 'Diffusion':
+                print('It is diffusion')
+
+            elif iTerm == 'FalseTransient':
+                print('It is false transient')
+                
+            else:
+                print('\n%s\n' % (iTerm + ' term is not defined'))
+
+    def cfdZeroElementFLUXCoefficients(self):
+        """
+        Sets the coefficient arrays equal to zero
+        """
+        
+        print('Inside cfdZeroElementFLUXCoefficients')
+        self.region.fluxes.FluxC.fill(0)
+        self.region.fluxes.FluxV.fill(0)
+        self.region.fluxes.FluxT.fill(0)
+        self.region.fluxes.FluxC_old.fill(0)
+
+    def cfdAssembleTransientTerm(self):
+
+        """Chooses time-stepping approach
+
+        If ddtSchemes is 'steadyState' then pass, if 'Euler' then redirect
+        towards assembleFirstOrderEulerTransientTerm() or potentially others
+        later on.
+
+        Args:
+            self (class instance): Instance of Region class.
+            theEquationName (str): Equation (or field) name for which the transient terms will be assembled.
+
+        Returns:
+            none
+        """
+        
+        print('Inside cfdAssembleTransientTerm')
+        
+        theScheme = self.region.dictionaries.fvSchemes['ddtSchemes']['default']
+        
+        if theScheme == 'steadyState':
+            pass
+        elif theScheme == 'Euler':
+            self.assembleFirstOrderEulerTransientTerm()
+        else:
+            print('\n%s' % (theScheme+' ddtScheme is incorrect'))
+
+
+    def assembleFirstOrderEulerTransientTerm(self):
+        
+        """Assembles first order transient euler term
+        """
+
+        ## numpy array of element volumes
+        self.volumes = np.asarray(self.region.mesh.elementVolumes).reshape(-1,1)   
+        
+       
+        self.region.fluid[self.theEquationName].cfdGetSubArrayForInterior()
+        self.region.fluid[self.theEquationName].cfdGetPrevTimeStepSubArrayForInterior()
+        
+        ## phi for interior
+        self.phi=self.region.fluid[self.theEquationName].phiInteriorSubArray
+        
+        ## phi for interior in previous time step
+        self.phi_old=self.region.fluid[self.theEquationName].phi_oldInteriorSubArray
+
+        self.region.fluid['rho'].cfdGetSubArrayForInterior()
+        self.region.fluid['rho'].cfdGetPrevTimeStepSubArrayForInterior()
+        
+        ## rho for interior
+        self.rho=self.region.fluid['rho'].phiInteriorSubArray
+        
+        ## rho for interior in previous time step
+        self.rho_old=self.region.fluid['rho'].phi_oldInteriorSubArray
+
+        ## time step
+        self.deltaT = self.region.dictionaries.controlDict['deltaT']
+        
+        
+        local_FluxC = np.squeeze(np.multiply(self.volumes,np.divide(self.rho,self.deltaT)))
+        local_FluxC_old = np.squeeze(np.multiply(-self.volumes,np.divide(self.rho_old,self.deltaT)))
+        local_FluxV = np.zeros(len(local_FluxC))
+        
+        local_FluxT = np.squeeze(np.multiply(local_FluxC,np.squeeze(self.phi))) + np.multiply(local_FluxC_old,np.squeeze(self.phi_old))
+
+        self.region.fluxes.FluxC = local_FluxC
+        self.region.fluxes.FluxC_old = local_FluxC_old
+        self.region.fluxes.FluxV = local_FluxV
+        self.region.fluxes.FluxT = local_FluxT
+
+
+    def cfdPostAssembleScalarEquation(self, theEquationName):
+        """Empty function, not sure why it exists
+        """
+        pass
+
+    def cfdAssemebleConvectionTermIntoInterior(self,theEquationName):
+        
+        nmbrIntF=self.mesh.numberOfinteriorFaces
+        self.field[theEquationName].cfdGetSubArrayForInterior()
+        phi=self.field[theEquationName].phiInteriorSubArray
+        
+        self.field['mdot_f'].cfdGetSubArrayForInterior()
+        mdot_f=self.field['mdot_f'].phiInteriorSubArray
+        
+        local_FluxCf=max(mdot_f,0)
+        local_FluxFf=-max(-mdot_f,0)
+        
+        local_FluxVf=np.zeros(len(local_FluxCf))
+        
+        self.region.fluxes['FluxCf'][0:nmbrIntF]=local_FluxCf
+        self.region.fluxes['FluxFf'][0:nmbrIntF]=local_FluxFf
+        self.region.fluxes['FluxVf'][0:nmbrIntF]=local_FluxVf
+    #    self.region.fluxes['FluxTf'][0:nmbrIntF]=np.multiply(local_FluxCf, 
+        
+        
+    def cfdAssembleIntoGlobalMatrixElementFluxes(self):
+        """
+        Add the face and volume contributions to obtain ac, bc and ac_old
+        
+        These are the ac and bc coefficients in the linear system of equations
+        """
+        
+        
+        self.region.coefficients.ac=self.region.coefficients.ac+self.region.fluxes.FluxC
+        self.region.coefficients.ac_old=self.region.coefficients.ac_old+self.region.fluxes.FluxC_old
+        self.region.coefficients.bc=self.region.coefficients.bc-self.region.fluxes.FluxT
+
+
+        
+
+
             
-def assembleFirstOrderEulerTransientTerm(self, theEquationName):
+                
 
-    """Populates fluxes 
-    """
-    volumes = np.asarray(self.mesh.elementVolumes).reshape(-1,1)   
-    
-    # get fields
-    phi = field.cfdGetSubArrayForInterior(self,theEquationName)
-    phi_old = field.cfdGetPrevTimeStepSubArrayForInterior(self,theEquationName)
-    
-    rho = field.cfdGetSubArrayForInterior(self,'rho')
-    rho_old = field.cfdGetPrevTimeStepSubArrayForInterior(self,'rho')
-    
-    deltaT = self.dictionaries.controlDict['deltaT']
-    
-    # local fluxes
-    
-    local_FluxC = np.multiply(volumes,np.divide(rho,deltaT))
-    
-    local_FluxC_old = np.multiply(-volumes,np.divide(rho_old,deltaT))
-    
-    local_FluxV = np.zeros(len(local_FluxC))
-    
-    local_FluxT = np.multiply(local_FluxC,phi) + np.multiply(local_FluxC_old,phi_old)
-
-    self.fluxes.FluxC = local_FluxC
-    self.fluxes.FluxC_old = local_FluxC_old
-    self.fluxes.FluxV = local_FluxV
-    self.fluxes.FluxT = local_FluxT
     
 

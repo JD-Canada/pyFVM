@@ -11,6 +11,7 @@ import pyFVM.Coefficients as coefficients
 import pyFVM.Fluxes as fluxes
 import pyFVM.Gradient as grad
 import pyFVM.Time as Time
+import pyFVM.Assemble as assemble
 
 
 
@@ -110,6 +111,7 @@ class Region():
             # Copy current field into previous TIME field        
             self.thePhiField = self.fluid['phi']
             self.thePhiField.setPreviousTimeStep()
+            
 
             #sub-loop
             for nIter in range(10):
@@ -125,10 +127,10 @@ class Region():
                 """
                 To-do: Work through cfdAssembleAndCorrectScalarEquation()
                 """
-   
+                
+                self.assembledPhi=assemble.Assemble(self,'phi')
 
      
-
     def cfdGeometricLengthScale(self):
     
         """

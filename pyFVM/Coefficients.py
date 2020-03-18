@@ -26,7 +26,7 @@ class Coefficients():
                
         theNumberOfElements=len(self.theCConn)
         
-        ## array of cell-centered contribution to the flux term. These are constants (assuming fixed mesh geometry) and constant diffusion coefficients and therefore act as 'coefficients' in the algebraic equations. See p. 229 Moukalled.
+        ## array of cell-centered contribution to the flux term. These are constants and constant diffusion coefficients and therefore act as 'coefficients' in the algebraic equations. See p. 229 Moukalled.
         self.ac=np.zeros((theNumberOfElements))
         
         ## see ac, however this is for the previous timestep? Check this later when you know more. 
