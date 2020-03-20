@@ -12,7 +12,7 @@ cfdAssembleAndCorrectScalarEquation
 			-cfdAssembleIntoGlobalMatrixElementFluxes (DONE)
 			
 			-cfdAssembleConvectionTerm (mostly the subfunctions)
-				-cfdAssembleConvectionTermInterior (10 lines, easy)
+				-cfdAssembleConvectionTermInterior (10 lines, easy) (DONE)
 				-cfdAssembleConvectionTermZeroGradient (10 lines, easy)
 				-cfdAssembleConvectionTermSpecifiedValue (10 lines, easy)
 				

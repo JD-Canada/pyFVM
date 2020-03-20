@@ -52,6 +52,9 @@ class Assemble:
             else:
                 print('\n%s\n' % (iTerm + ' term is not defined'))
 
+
+        self.cfdAssembleConvectionTermInterior('phi')
+
     def cfdZeroElementFLUXCoefficients(self):
         """
         Sets the coefficient arrays equal to zero
@@ -139,24 +142,30 @@ class Assemble:
         """
         pass
 
-    def cfdAssemebleConvectionTermIntoInterior(self,theEquationName):
+    def cfdAssembleConvectionTermInterior(self, theEquationName):
         
-        nmbrIntF=self.mesh.numberOfinteriorFaces
-        self.field[theEquationName].cfdGetSubArrayForInterior()
-        phi=self.field[theEquationName].phiInteriorSubArray
+        numberOfInteriorFaces = self.region.mesh.numberOfInteriorFaces
         
-        self.field['mdot_f'].cfdGetSubArrayForInterior()
-        mdot_f=self.field['mdot_f'].phiInteriorSubArray
+        owners_f = self.region.mesh.interiorFaceOwners
+        neighbours_f = self.region.mesh.interiorFaceNeighbours
+
+        self.region.fluid[theEquationName].cfdGetSubArrayForInterior()
+        phi=self.region.fluid[theEquationName].phiInteriorSubArray
         
-        local_FluxCf=max(mdot_f,0)
-        local_FluxFf=-max(-mdot_f,0)
+        self.region.fluid['mdot_f'].cfdGetSubArrayForInterior()
+        mdot_f=self.region.fluid['mdot_f'].phiInteriorSubArray
+        
+        local_FluxCf=np.maximum(mdot_f,0)
+        local_FluxFf=-np.maximum(-mdot_f,0)
         
         local_FluxVf=np.zeros(len(local_FluxCf))
         
-        self.region.fluxes['FluxCf'][0:nmbrIntF]=local_FluxCf
-        self.region.fluxes['FluxFf'][0:nmbrIntF]=local_FluxFf
-        self.region.fluxes['FluxVf'][0:nmbrIntF]=local_FluxVf
-    #    self.region.fluxes['FluxTf'][0:nmbrIntF]=np.multiply(local_FluxCf, 
+        self.region.fluxes.FluxCf[0:numberOfInteriorFaces] = local_FluxCf
+        self.region.fluxes.FluxFf[0:numberOfInteriorFaces] = local_FluxFf
+        self.region.fluxes.FluxVf[0:numberOfInteriorFaces] = local_FluxVf
+
+        self.region.fluxes.FluxTf[0:numberOfInteriorFaces] = np.multiply(local_FluxCf,np.squeeze(phi[owners_f]))+ np.multiply(local_FluxFf,np.squeeze(phi[neighbours_f]))+ local_FluxVf
+        
         
         
     def cfdAssembleIntoGlobalMatrixElementFluxes(self):
@@ -172,11 +181,14 @@ class Assemble:
         self.region.coefficients.bc=self.region.coefficients.bc-self.region.fluxes.FluxT
 
 
+
+
         
 
-
-            
+        
                 
+        
+    
 
     
 
