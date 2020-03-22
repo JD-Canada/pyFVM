@@ -275,12 +275,21 @@ class Field():
         
         self.phi[self.iBElements]=self.phi[self.owners_b]-self.U_normal
         
+
+    def cfdGetOwnersSubArrayForInteriorFaces(self,attribute):
+        
+        if self.type == 'surfaceScalarField':
+            return self.Region.mesh.attribute[0:self.region.mesh.numberOfInteriorFaces]
+             
+        elif self.type == 'volScalarField':
+            return self.Region.mesh.attribute[0:self.region.mesh.numberOfInteriorFaces]
+
         
     def cfdGetSubArrayForInterior(self,*args):
         
         if self.type == 'surfaceScalarField':
             self.phiInteriorSubArray = self.phi[0:self.Region.mesh.numberOfInteriorFaces]
-           
+            
         elif self.type == 'volScalarField':
             self.phiInteriorSubArray = self.phi[0:self.Region.mesh.numberOfElements]    
             
@@ -303,7 +312,18 @@ class Field():
 #        else:
 #            self.phi_oldInteriorSubArray = self.prevTimeStep[0:self.Region.mesh.numberOfElements,iComponent]
             
+    def cfdGetGradientSubArrayForInterior(self):
+        
+        if self.type == 'volScalarField':
             
+            self.phiGradInterior=self.phiGrad[0:self.Region.mesh.numberOfElements]
             
+            return self.phiGradInterior
+        
+        if self.type == 'volVectorField':
+            
+            self.phiGradInterior=self.phiGrad[0:self.Region.mesh.numberOfElements]
+        
+        
             
             

@@ -19,7 +19,7 @@ cfdReadOpenFoamFiles;
 
 % Define transient-convection equation
 cfdSetupEquation('phi');
-cfdSetTerms('phi', {'Transient', 'Convection'});
+cfdSetTerms('phi', {'Transient', 'Convection','Diffusion'});
 
 % Define mdot_f field
 cfdSetupMeshField('mdot_f', 'surfaceScalarField', 'dimensions', [0,0,0,0,0,0,0]);  
@@ -77,8 +77,8 @@ while (cfdDoTransientLoop)
         cfdAssembleAndCorrectScalarEquation('phi');
         
         % Post actions
-        cfdPlotEquationRes('phi');
-        cfdPostEquationResults('phi',totalNumberOfIterations);
-        cfdWriteResults(totalNumberOfIterations);
+%         cfdPlotEquationRes('phi');
+%         cfdPostEquationResults('phi',totalNumberOfIterations);
+%         cfdWriteResults(totalNumberOfIterations);
     end
 end

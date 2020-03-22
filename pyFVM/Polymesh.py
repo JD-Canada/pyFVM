@@ -71,6 +71,9 @@ class Polymesh():
         ## (array) 2D, normal vectors (Sf) of the interior faces (indices refer to face index)
         self.interiorFaceSf = self.faceSf[0:self.numberOfInteriorFaces]
         
+        ## (array) 2D, CF vectors of the interior faces (indices refer to face index)
+        self.interiorFaceCF = self.faceCF[0:self.numberOfInteriorFaces]
+        
         ## (list) 1D, indices refer to an boundary face, list value refers to the face's owner
         self.owners_b = self.owners[self.numberOfInteriorFaces:self.numberOfFaces]
 
@@ -685,5 +688,20 @@ class Polymesh():
             self.cfdBoundaryPatchesArray[iBPatch]['facesSf']=np.asarray(self.cfdBoundaryPatchesArray[iBPatch]['facesSf'])
 
 
-            
-
+#    def cfdGetOwnersSubArrayForInteriorFaces(self):
+#        
+#        """Returns owners sub-array for interior faces
+#        """
+#
+#        self.owners_f=self.owners[0:self.numberOfInteriorFaces]         
+#        return self.owners_f
+#    
+#    def cfdGetNeighboursSubArrayForInteriorFaces(self):
+#        
+#        """Returns neighbours sub-array for interior faces
+#        """
+#
+#        self.neighbours_f=self.neighbours[0:self.numberOfInteriorFaces]         
+#        return self.neighbours_f
+    
+    

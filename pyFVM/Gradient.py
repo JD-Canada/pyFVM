@@ -17,6 +17,7 @@ class Gradient():
         self.Region=Region
         self.phiName=phiName
         self.phi=self.Region.fluid[phiName].phi
+        self.type=self.Region.fluid[phiName].type
         
         theSize=self.phi.shape[1]
         
@@ -210,6 +211,9 @@ class Gradient():
         self.phiGrad[iBElements,:,:]=grad_b 
 
 
+    def cfdGetGradientSubArrayForInterior(self):
 
+        if self.type == "surfaceScalarField":
+              self.phiGradInter=self.phiGrad[0:self.region.mesh.numberOfInteriorFaces]
 
         

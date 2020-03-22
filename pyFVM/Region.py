@@ -72,7 +72,7 @@ class Region():
 
         #Define transient-convection equation
         self.model['phi']=equation.Equation(self,'phi')
-        self.model['phi'].setTerms(['Transient', 'Convection'])
+        self.model['phi'].setTerms(['Transient', 'Convection','Diffusion'])
         
         #Define mdot_f field
         self.fluid['mdot_f']=field.Field(self,'mdot_f','surfaceScalarField')
@@ -107,12 +107,10 @@ class Region():
             #manage time
             self.time.cfdPrintCurrentTime()
             self.time.cfdUpdateRunTime()
-      
-            # Copy current field into previous TIME field        
+          
             self.thePhiField = self.fluid['phi']
             self.thePhiField.setPreviousTimeStep()
             
-
             #sub-loop
             for nIter in range(10):
                 

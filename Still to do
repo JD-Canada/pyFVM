@@ -26,9 +26,8 @@ cfdAssembleAndCorrectScalarEquation
 				
 			
 			-cfdAssembleDiffusionTerm (mostly logic and subfunctions in file)
-				-cfdAssembleDiffusionTermInterior (20 lines, medium)
-				-cfdAssembleDiffusionTermSpecifiedValue (20 lines, easy)
-				
+				-cfdAssembleDiffusionTermInterior (Started, but passed on it. Not necessary for our test case)
+				-cfdAssembleDiffusionTermSpecifiedValue (passed not necessary yet)
 				
 			-cfdAssembleFalseTransientTerm (10 lines, easy)
 

@@ -1,5 +1,7 @@
 import numpy as np
 import pyFVM.Field as field
+import pyFVM.Math as math
+import pyFVM.Interpolate as interpolate
 
 class Assemble:
     """Logic and functions necessary to assemble an equation 
@@ -11,6 +13,30 @@ class Assemble:
 
         ## Instance of the case's region class
         self.region=Region
+        
+        ## List of face indices
+        self.iFaces = np.arange(0,self.region.mesh.numberOfInteriorFaces)
+        
+        ## Face normal vectors
+        self.Sf=self.region.mesh.faceSf
+        
+        ## vector formed between owner and neighbour cell centroids
+        self.CF=np.asarray(self.region.mesh.faceCF[0:self.region.mesh.numberOfInteriorFaces])
+        
+        ## list of owner cells for faces (each index is a face)
+        self.owners_f=self.region.mesh.owners
+        
+        ## list of neighbour cells for faces (each index is a face)
+        self.neighbours_f=self.region.mesh.neighbours
+        
+        ## Unit normal vectors for self.CF
+        self.e=math.cfdUnit(self.CF)
+        
+        ## Norm of self.Sf
+        self.cfdMagSf=math.cfdMag(self.Sf)
+        
+        ## Norm of self.CF
+        self.cfdMagCf=math.cfdMag(self.CF)
 
         ## Name of the equation stored in region.model dictionary
         self.theEquationName=theEquationName
@@ -44,7 +70,8 @@ class Assemble:
                 print('It is convection')
 
             elif iTerm == 'Diffusion':
-                print('It is diffusion')
+                self.cfdZeroElementFLUXCoefficients()
+                self.cfdAssembleDiffusionTermInterior()                
 
             elif iTerm == 'FalseTransient':
                 print('It is false transient')
@@ -146,8 +173,8 @@ class Assemble:
         
         numberOfInteriorFaces = self.region.mesh.numberOfInteriorFaces
         
-        owners_f = self.region.mesh.interiorFaceOwners
-        neighbours_f = self.region.mesh.interiorFaceNeighbours
+#        owners_f = self.region.mesh.interiorFaceOwners
+#        neighbours_f = self.region.mesh.interiorFaceNeighbours
 
         self.region.fluid[theEquationName].cfdGetSubArrayForInterior()
         phi=self.region.fluid[theEquationName].phiInteriorSubArray
@@ -164,8 +191,8 @@ class Assemble:
         self.region.fluxes.FluxFf[0:numberOfInteriorFaces] = local_FluxFf
         self.region.fluxes.FluxVf[0:numberOfInteriorFaces] = local_FluxVf
 
-        self.region.fluxes.FluxTf[0:numberOfInteriorFaces] = np.multiply(local_FluxCf,np.squeeze(phi[owners_f]))+ np.multiply(local_FluxFf,np.squeeze(phi[neighbours_f]))+ local_FluxVf
-        
+        self.region.fluxes.FluxTf[0:numberOfInteriorFaces] = np.multiply(local_FluxCf,np.squeeze(phi[self.owners_f]))+\
+        np.multiply(local_FluxFf,np.squeeze(phi[self.neighbours_f]))+ local_FluxVf
         
         
     def cfdAssembleIntoGlobalMatrixElementFluxes(self):
@@ -175,12 +202,26 @@ class Assemble:
         These are the ac and bc coefficients in the linear system of equations
         """
         
-        
         self.region.coefficients.ac=self.region.coefficients.ac+self.region.fluxes.FluxC
         self.region.coefficients.ac_old=self.region.coefficients.ac_old+self.region.fluxes.FluxC_old
         self.region.coefficients.bc=self.region.coefficients.bc-self.region.fluxes.FluxT
 
 
+    def cfdAssembleDiffusionTermInterior(self):
+        
+        """
+        Assembles a diffusion term for the interior 
+        """
+        
+        ## Gradients for interior elements
+        self.gradPhi=self.region.fluid[self.theEquationName].cfdGetGradientSubArrayForInterior()
+        
+        ## Interpolated gradients on interior faces
+        self.gradPhi_f=interpolate.cfdInterpolateGradientFromElementsToInteriorFaces(self.region,self.gradPhi,'linear',1)
+        
+        """
+        Our test case does not have a diffusion term. So we don't have 'gamma'. We'll keep going with this later.
+        """
 
 
         

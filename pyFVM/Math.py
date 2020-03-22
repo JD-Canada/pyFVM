@@ -26,3 +26,7 @@ def cfdMag(valueVector):
         result = magnitude
 
     return result
+
+def cfdUnit(vector):
+    
+    return vector/np.linalg.norm(vector,axis=1)[:,None]

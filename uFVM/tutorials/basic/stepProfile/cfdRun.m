@@ -17,71 +17,68 @@ cfdStartSession;
 % Read OpenFOAM Files
 cfdReadOpenFoamFiles;
 
-global Region;
-
-
-% % Define transient-convection equation
+% Define transient-convection equation
 cfdSetupEquation('phi');
 cfdSetTerms('phi', {'Transient', 'Convection'});
-% 
-% % Define mdot_f field
+
+% Define mdot_f field
 cfdSetupMeshField('mdot_f', 'surfaceScalarField', 'dimensions', [0,0,0,0,0,0,0]);  
 cfdInitializeMdotFromU;
-% 
-% % Run case
+
+% Run case
 cfdPrintHeader;
-% 
-% % Setup algebraic coefficients
+
+% Setup algebraic coefficients
 theCoefficients = cfdSetupCoefficients;
 cfdSetCoefficients(theCoefficients);
-% 
-% % Setup assembly fluxes
+
+% Setup assembly fluxes
 cfdSetupFluxes;
-% 
-% % Initialize runtime
+
+% Initialize runtime
 cfdInitTime;
 cfdInitDirectories('phi');
-% 
-% % Pre-updates (necessary on startup)
+
+% Pre-updates (necessary on startup)
 cfdUpdateScalarFieldForAllBoundaryPatches('phi');
 cfdUpdateGradient('phi');
-% cfdUpdateScale('phi');
+cfdUpdateScale('phi');
 
 % Start transient loop
-% totalNumberOfIterations = 0;
-% while (cfdDoTransientLoop)
-%     
-%     % Time settings
-%     cfdUpdateRunTime;
-%     
-%     % Copy current time fields to previous time fields
-%     thePhiField = cfdGetMeshField('phi');
-%     thePhiField.prevTimeStep.phi = thePhiField.phi;  
-%     cfdSetMeshField(thePhiField);
-%     
-%     % Print current simulation time
-%     cfdPrintCurrentTime;
-%     
-%     % Start loop at current time step
-%     for iter=1:10
-%         % Update number of global iters
-%         totalNumberOfIterations = totalNumberOfIterations + 1;
-%         
-%         % Print
-%         cfdPrintIteration(totalNumberOfIterations);
-%         cfdPrintResidualsHeader;
-%         
-%         % Store previous iter field
-%         thePhiField = cfdGetMeshField('phi');
-%         thePhiField.prevIter.phi = thePhiField.phi;  
-%         cfdSetMeshField(thePhiField);
-%         
-%         % Scalar equation
-%         cfdAssembleAndCorrectScalarEquation('phi');
-%         
-%         % Post actions
-%         cfdPlotEquationRes('phi');
-%         cfdPostEquationResults('phi',totalNumberOfIterations);
-%         cfdWriteResults(totalNumberOfIterations);
-%     end
-% end
+totalNumberOfIterations = 0;
+while (cfdDoTransientLoop)
+    
+    % Time settings
+    cfdUpdateRunTime;
+    
+    % Copy current time fields to previous time fields
+    thePhiField = cfdGetMeshField('phi');
+    thePhiField.prevTimeStep.phi = thePhiField.phi;  
+    cfdSetMeshField(thePhiField);
+    
+    % Print current simulation time
+    cfdPrintCurrentTime;
+    
+    % Start loop at current time step
+    for iter=1:10
+        % Update number of global iters
+        totalNumberOfIterations = totalNumberOfIterations + 1;
+        
+        % Print
+        cfdPrintIteration(totalNumberOfIterations);
+        cfdPrintResidualsHeader;
+        
+        % Store previous iter field
+        thePhiField = cfdGetMeshField('phi');
+        thePhiField.prevIter.phi = thePhiField.phi;  
+        cfdSetMeshField(thePhiField);
+        
+        % Scalar equation
+        cfdAssembleAndCorrectScalarEquation('phi');
+        
+        % Post actions
+        cfdPlotEquationRes('phi');
+        cfdPostEquationResults('phi',totalNumberOfIterations);
+        cfdWriteResults(totalNumberOfIterations);
+    end
+end

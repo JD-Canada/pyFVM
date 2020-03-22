@@ -17,7 +17,7 @@ FoamFile
 
 application     uFVM;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
@@ -29,9 +29,9 @@ deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   10;
+writeInterval   1;
 
-purgeWrite      2;
+purgeWrite      0;
 
 
 // ************************************************************************* //
