@@ -25,9 +25,13 @@ class Assemble:
         
         ## list of owner cells for faces (each index is a face)
         self.owners_f=self.region.mesh.owners
+        self.owners_interior_f = self.region.mesh.interiorFaceOwners
+        
         
         ## list of neighbour cells for faces (each index is a face)
         self.neighbours_f=self.region.mesh.neighbours
+        self.neighbours_interior_f = self.region.mesh.interiorFaceNeighbours
+        
         
         ## Unit normal vectors for self.CF
         self.e=math.cfdUnit(self.CF)
@@ -172,10 +176,7 @@ class Assemble:
     def cfdAssembleConvectionTermInterior(self, theEquationName):
         
         numberOfInteriorFaces = self.region.mesh.numberOfInteriorFaces
-        
-#        owners_f = self.region.mesh.interiorFaceOwners
-#        neighbours_f = self.region.mesh.interiorFaceNeighbours
-
+    
         self.region.fluid[theEquationName].cfdGetSubArrayForInterior()
         phi=self.region.fluid[theEquationName].phiInteriorSubArray
         
@@ -191,8 +192,8 @@ class Assemble:
         self.region.fluxes.FluxFf[0:numberOfInteriorFaces] = local_FluxFf
         self.region.fluxes.FluxVf[0:numberOfInteriorFaces] = local_FluxVf
 
-        self.region.fluxes.FluxTf[0:numberOfInteriorFaces] = np.multiply(local_FluxCf,np.squeeze(phi[self.owners_f]))+\
-        np.multiply(local_FluxFf,np.squeeze(phi[self.neighbours_f]))+ local_FluxVf
+        self.region.fluxes.FluxTf[0:numberOfInteriorFaces] = np.multiply(local_FluxCf,np.squeeze(phi[self.owners_interior_f]))+\
+        np.multiply(local_FluxFf,np.squeeze(phi[self.neighbours_interior_f]))+ local_FluxVf
         
         
     def cfdAssembleIntoGlobalMatrixElementFluxes(self):
